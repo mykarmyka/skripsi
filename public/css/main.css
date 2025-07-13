@@ -1,0 +1,90 @@
+body {
+    background-color: #d8edf7;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.content-area {
+    background-color: #d8edf7 !important;
+}
+
+.sidebar {
+    background-color: #ffffff;
+    height: 100vh;
+    padding: 30px 20px;
+    box-shadow: 1px 0 5px rgba(0, 0, 0, 0.1);
+}
+
+.sidebar h4 {
+    font-weight: bold;
+    margin-top: 10px;
+}
+
+.sidebar .nav-link {
+    color: #333;
+    padding: 8px 12px;
+    border-radius: 10px;
+    margin-bottom: 8px;
+    font-size: 13px;
+}
+
+.sidebar .nav-link.active,
+.sidebar .nav-link:hover {
+    background-color: #466aa5;
+    color: white;
+}
+
+.section-title {
+    font-weight: bold;
+    margin-top: 20px;
+    font-size: 13px;
+    text-transform: uppercase;
+    color: #555;
+}
+
+.header-right {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.header-right input {
+    border-radius: 10px;
+    border: 1px solid #d8edf7;
+    padding: 6px 12px;
+}
+
+.card-summary {
+    text-align: center;
+    padding: 30px 20px;
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+}
+
+.card-summary h3 {
+    font-size: 28px;
+    margin-bottom: 5px;
+}
+
+.card-summary p {
+    font-size: 14px;
+    color: #555;
+}
+
+.table-container {
+    background-color: white;
+    padding: 30px;
+    border-radius: 10px;
+    margin-top: 20px;
+}
+
+.table th,
+.table td {
+    vertical-align: middle;
+    font-size: 14px;
+}
+
+.search-box {
+    text-align: right;
+    margin-bottom: 15px;
+}

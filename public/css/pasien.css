@@ -1,0 +1,80 @@
+body {
+    background-color: #e2f1f9;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Header halaman */
+h2 {
+    font-weight: bold;
+    color: #333;
+}
+
+p {
+    color: #666;
+    margin-bottom: 20px;
+}
+
+/* Tombol tambah pasien */
+.btn-primary {
+    background-color: #4d9fe3;
+    border: none;
+    font-weight: bold;
+    padding: 8px 16px;
+    border-radius: 8px;
+}
+
+.btn-primary:hover {
+    background-color: #367bbd;
+}
+
+/* Tombol aksi */
+.btn-info, .btn-warning, .btn-danger {
+    font-size: 12px;
+    padding: 4px 10px;
+    border-radius: 6px;
+}
+
+/* Tabel */
+.table th, .table td {
+    vertical-align: middle;
+    font-size: 14px;
+    text-align: center;
+    padding: 3px 7px;
+}
+
+.table thead {
+    background-color: #dcefff;
+    font-weight: bold;
+}
+
+.table tbody tr:nth-child(even) {
+    background-color: #f7fafe;
+}
+
+.table-responsive {
+    background-color: white;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+/* Atur kolom Tgl Lahir dan Usia */
+.table td:nth-child(5),  /* Tgl Lahir */
+.table td:nth-child(5) { /* Usia */
+    min-width: 90px;
+}
+
+/* Kolom yang boleh wrap */
+.table td:nth-child(9),  /* Alamat */
+.table td:nth-child(10) { /* Nama Pasangan */
+    max-width: 150px;
+    white-space: normal;
+    word-wrap: break-word;
+}
+
+/* Search Box */
+#search {
+    border-radius: 8px;
+    padding: 5px 10px;
+    border: 1px solid #ccc;
+}
