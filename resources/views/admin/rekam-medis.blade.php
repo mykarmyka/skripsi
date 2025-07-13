@@ -58,9 +58,23 @@
                     <input type="text" name="jenis_layanan" class="form-control" required>
                 </div>
                 <div class="mb-3">
+                    <label for="diagnosa" class="form-label">Anamnesa</label>
+                    <input type="text" name="anamnesa" class="form-control" required>
+                </div>
+                <div class="mb-3">
                     <label for="diagnosa" class="form-label">Diagnosa</label>
                     <input type="text" name="diagnosa" class="form-control" required>
                 </div>
+                <div class="mb-3">
+                    <label for="diagnosa" class="form-label">Terapi</label>
+                    <input type="text" name="terapi" class="form-control" required>
+                </div>
+
+                <div class="mb-3">
+                    <label for="diagnosa" class="form-label">Keterangan</label>
+                    <input type="text" name="keterangan" class="form-control" required>
+                </div>
+
                 </div>
                 <div class="modal-footer">
                 <button type="submit" class="btn btn-primary">Simpan</button>
