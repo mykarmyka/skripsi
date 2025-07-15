@@ -1,0 +1,161 @@
+body {
+    background-color: #d8edf4;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.container {
+    padding: 20px;
+}
+
+.judul-halaman {
+    font-size: 20px;
+    font-weight: 600;
+    margin-bottom: 4px;
+    color: #111;
+}
+
+.deskripsi {
+    color: #666;
+    margin-bottom: 16px;
+}
+
+.card-obat {
+    background-color: #fff;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+}
+
+.btn-primary {
+    background-color: #5b9be3;
+    font-weight: bold;
+    border: none;
+    border-radius: 8px;
+    padding: 8px 16px;
+    color: white;
+}
+
+.btn-primary:hover {
+    background-color: #3b7fc7;
+}
+
+.search-box input {
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    padding: 6px 10px;
+}
+
+.table-wrapper {
+    overflow-x: auto;
+}
+
+.table {
+    width: 100%;
+    min-width: 800px;
+    font-size: 14px;
+    border-collapse: collapse;
+}
+
+.table th, .table td {
+    vertical-align: middle;
+    white-space: nowrap;
+    padding: 8px 10px;
+}
+
+.table thead {
+    background-color: #f0f8ff;
+}
+
+.table tbody tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+.btn-edit, .btn-delete {
+    width: 28px;
+    height: 28px;
+    border-radius: 5px;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 16px;
+    border: none;
+    margin: 0 2px;
+}
+
+.btn-edit {
+    background-color: #e2fce7;
+    color: #2f9e44;
+}
+
+.btn-edit:hover {
+    background-color: #c9f5d2;
+}
+
+.btn-delete {
+    background-color: #fde2e2;
+    color: #d63333;
+}
+
+.btn-delete:hover {
+    background-color: #facccc;
+}
+
+.pagination-container {
+    display: flex;
+    justify-content: flex-start;
+    padding-left: 8px;
+}
+
+.btn-page {
+    width: 30px;
+    height: 30px;
+    background-color: #e2e2e2;
+    border: none;
+    margin-right: 4px;
+    border-radius: 4px;
+    font-weight: bold;
+}
+
+.btn-page.active {
+    background-color: #5b9be3;
+    color: white;
+}
+
+.pagination {
+    margin-bottom: 0;
+}
+
+.page-item .page-link {
+    padding: 6px 12px;
+    font-size: 14px;
+    color: #4d9fe3;
+    background-color: #eaf4fc;
+    border: none;
+    margin: 0 2px;
+    border-radius: 6px;
+}
+
+.page-item.disabled .page-link {
+    color: #ccc;
+    background-color: #f0f0f0;
+}
+
+.page-item.active .page-link {
+    background-color: #4d9fe3;
+    color: #fff;
+    font-weight: bold;
+}
+
+.page-item.disabled .page-link.pagination-arrow {
+    font-size: 22px; /* Lebih besar khusus tanda << dan >> */
+    font-weight: bold;
+}
+
+.info-box {
+    margin-top: 30px;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 12px;
+    text-align: center;
+    font-weight: bold;
+}

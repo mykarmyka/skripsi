@@ -24,3 +24,7 @@ Route::post('/admin/obat', [ObatController::class, 'store'])->name('obat.store')
 // Rekam Medis
 Route::get('/admin/rekam-medis', [RekamMedisController::class, 'index'])->name('admin.rekam-medis');
 Route::post('/admin/rekam-medis', [RekamMedisController::class, 'store'])->name('rekam.store');
+
+use App\Http\Controllers\User\UserController;
+
+Route::get('/user/home', [UserController::class, 'home'])->name('user.home');
