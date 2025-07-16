@@ -25,18 +25,18 @@
                 <i class="bi bi-house-door"></i> Home
             </a>
 
-            <a href="#"
-                class="block px-3 py-2 rounded hover:bg-blue-200 ">
+            <a href="{{ route('user.pendaftaran') }}"
+                class="block px-3 py-2 rounded hover:bg-blue-200 {{ request()->routeIs('user.pendaftaran') ? 'bg-blue-200 font-semibold text-blue-800' : '' }}">
                 <i class="bi bi-clipboard-check"></i> Pendaftaran Layanan
             </a>
 
-            <a href="#"
-                class="block px-3 py-2 rounded hover:bg-blue-200 ">
+            <a href="{{ route('user.profil') }}"
+                class="block px-3 py-2 rounded hover:bg-blue-200 {{ request()->routeIs('user.profil') ? 'bg-blue-200 font-semibold text-blue-800' : '' }}">
                 <i class="bi bi-person"></i> Profil Saya
             </a>
 
             <a href="#" 
-                class="block px-3 py-2 rounded hover:bg-blue-200">
+                class="block px-3 py-2 rounded hover:bg-blue-200" data-bs-toggle="modal" data-bs-target="#logoutModal">
                 <i class="bi bi-box-arrow-right"></i>Logout
             </a>
             
@@ -47,6 +47,31 @@
     <main class="flex-1 p-10" style="width: 100%">
         @yield('content')
     </main>
+
+    <!-- Modal Konfirmasi Logout -->
+    <div class="modal fade" id="logoutModal" tabindex="-1" aria-labelledby="logoutModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content rounded-3 shadow">
+        <div class="modal-header">
+            <h5 class="modal-title fw-bold" id="logoutModalLabel">Konfirmasi Logout</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tutup"></button>
+        </div>
+        <div class="modal-body">
+            Apakah Anda yakin ingin logout?
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+            
+            <!-- Logout form -->
+            <form action="{{ route('logout') }}" method="POST">
+                @csrf
+                <button type="submit" class="btn btn-danger">Ya, Logout</button>
+            </form>
+        </div>
+        </div>
+    </div>
+    </div>
+
 
 </body>
 </html>

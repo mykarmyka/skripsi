@@ -27,4 +27,16 @@ Route::post('/admin/rekam-medis', [RekamMedisController::class, 'store'])->name(
 
 use App\Http\Controllers\User\UserController;
 
+// Home
 Route::get('/user/home', [UserController::class, 'home'])->name('user.home');
+Route::post('/user/pendaftaran/simpan', [UserController::class, 'simpanPendaftaran'])->name('user.pendaftaran.simpan');
+
+// Pendaftaran
+Route::get('/user/pendaftaran', [UserController::class, 'formPendaftaran'])->name('user.pendaftaran');
+
+// Profil
+Route::get('/user/profil', function () {
+    return view('user.profil'); })->name('user.profil');
+
+// Logout
+Route::post('/logout', [AuthController::class, 'logout'])->name('logout');

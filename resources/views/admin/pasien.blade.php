@@ -77,7 +77,7 @@
                 </div>
                 
                 <div class="col-md-6">
-                    <label class="form-label">Nama Pasangan</label>
+                    <label class="form-label">Nama Suami/Istri</label>
                     <input type="text" name="nama_pasangan" class="form-control">
                 </div>
 
@@ -108,7 +108,7 @@
                         <th>Jenis Kelamin</th>
                         <th>No. Telepon</th>
                         <th>Alamat</th>
-                        <th>Nama Pasangan</th>
+                        <th>Nama Suami/Istri</th>
                         <th>Aksi</th>
                     </tr>
                 </thead>

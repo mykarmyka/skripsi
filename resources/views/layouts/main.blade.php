@@ -21,7 +21,7 @@
 
         <nav class="space-y-2">
             <a href="{{ route('admin.dashboard') }}" 
-                class="block px-3 py-2 rounded hover:bg-blue-200 {{ request()->routeIs('admin.dashboard-admin') ? 'bg-blue-200 font-semibold text-blue-800' : '' }}">
+                class="block px-3 py-2 rounded hover:bg-blue-200 {{ request()->routeIs('admin.dashboard') ? 'bg-blue-200 font-semibold text-blue-800' : '' }}">
                 <i class="bi bi-house-door me-2"></i>Dashboard
             </a>
             <p class="text-gray-500 text-sm mt-4">DATA MASTER</p>
