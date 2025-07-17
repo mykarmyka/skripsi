@@ -38,7 +38,7 @@
 
             <p class="text-gray-500 text-sm mt-4">MANAJEMEN</p>
 
-            <a href="#" class="block px-3 py-2 rounded hover:bg-blue-200">
+            <a href="{{ route('admin.layanan') }}" class="block px-3 py-2 rounded hover:bg-blue-200 {{ request()->routeIs('admin.layanan') ? 'bg-blue-200 font-semibold text-blue-800' : '' }}">
                 <i class="bi bi-clipboard-check me-2"></i>Pendaftaran
             </a>
             

@@ -18,8 +18,13 @@ Route::get('/admin/obat', [AdminController::class, 'dataObat'])->name('admin.oba
 Route::get('/admin/pasien', [AdminController::class, 'dataPasien'])->name('admin.pasien');
 Route::post('/admin/pasien', [PasienController::class, 'store'])->name('pasien.store');
 
+
 // Obat
 Route::post('/admin/obat', [ObatController::class, 'store'])->name('obat.store'); 
+
+// Layanan
+Route::get('/admin/layanan', [AdminController::class, 'lihatPendaftaran'])->name('admin.layanan');
+
 
 // Rekam Medis
 Route::get('/admin/rekam-medis', [RekamMedisController::class, 'index'])->name('admin.rekam-medis');

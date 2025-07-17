@@ -49,4 +49,32 @@ class AdminController extends Controller
     {
         return view('admin.obat');
     }
+
+    public function lihatPendaftaran()
+    {
+        // Simulasi data dummy (belum dari DB)
+        $pendaftaran = [
+            [
+                'id' => 1,
+                'nama' => 'Siti Aisyah',
+                'jenis_layanan' => 'Pemeriksaan Kehamilan',
+                'tanggal' => '2025-07-16',
+            ],
+            [
+                'id' => 2,
+                'nama' => 'Dewi Lestari',
+                'jenis_layanan' => 'KB Implan',
+                'tanggal' => '2025-07-16',
+            ],
+            [
+                'id' => 3,
+                'nama' => 'Lina Marlina',
+                'jenis_layanan' => 'Persalinan',
+                'tanggal' => '2025-07-16',
+            ],
+        ];
+
+        return view('admin.layanan', compact('pendaftaran'));
+    }
+
 }
