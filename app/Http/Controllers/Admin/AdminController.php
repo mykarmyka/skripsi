@@ -4,12 +4,26 @@ namespace App\Http\Controllers\Admin;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Models\Pasien;
+use App\Models\PendaftaranLayanan;
+use App\Models\RekamMedis;
 
 class AdminController extends Controller
 {
     public function dashboard()
     {
-        return view('admin.dashboard'); 
+        $jumlahPasien = Pasien::count();
+        $jumlahLayanan = PendaftaranLayanan::count();
+        $jumlahAntrian = PendaftaranLayanan::whereDate('tgl_pendaftaran', now())->count();
+
+        $rekamMedis = RekamMedis::with(['pendaftaran.pasien'])->orderBy('created_at', 'desc')->get();
+        
+        return view('admin.dashboard', compact(
+            'jumlahPasien',
+            'jumlahLayanan',
+            'jumlahAntrian',
+            'rekamMedis'
+        )); 
     }
 
     public function dataPasien()

@@ -4,12 +4,20 @@ namespace App\Http\Controllers\Admin;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Models\RekamMedis;
 
 class RekamMedisController extends Controller
 {
     public function index()
     {
-        return view('admin.rekam-medis'); 
+        $rekamMedis = RekamMedis::with(['pasien', 'pendaftaran'])->orderByDesc('tgl_rm')->get();
+        return view('admin.rekam-medis', compact('rekamMedis'));
+    }
+
+    public function destroy($id)
+    {
+        RekamMedis::findOrFail($id)->delete();
+        return redirect()->back()->with('success', 'Data rekam medis berhasil dihapus.');
     }
 
     public function store(Request $request)

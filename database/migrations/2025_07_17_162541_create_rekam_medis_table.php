@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('rekam_medis', function (Blueprint $table) {
             $table->id('id_rm');
+            $table->unsignedBigInteger('id_pasien');
             $table->unsignedBigInteger('id_pendaftaran');
             $table->unsignedBigInteger('id_admin');
             $table->date('tgl_rm');
@@ -25,6 +26,7 @@ return new class extends Migration
             // Foreign Key
             $table->foreign('id_pendaftaran')->references('id_pendaftaran')->on('pendaftaran_layanan')->onDelete('cascade');
             $table->foreign('id_admin')->references('id_admin')->on('admin')->onDelete('cascade');
+            $table->foreign('id_pasien')->references('id_pasien')->on('pasien')->onDelete('cascade');
         });
     }
 

@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Pasien extends Model
 {
@@ -10,15 +11,17 @@ class Pasien extends Model
 
     protected $table = 'pasien';
 
+    protected $primaryKey = 'id_pasien';
+
     protected $fillable = [
         'nama', 
+        'nik',
         'tempat_lahir',
-        'tanggal_lahir', 
+        'tgl_lahir', 
         'jenis_kelamin',
         'alamat',
         'no_telp', 
         'nama_pasangan', 
-        'NIK',
         'email',
     ];
 }

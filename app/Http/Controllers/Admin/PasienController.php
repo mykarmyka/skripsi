@@ -4,37 +4,41 @@ namespace App\Http\Controllers\Admin;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Models\Pasien;
 
 class PasienController extends Controller
 {
     public function index()
     {
-        $pasiens = Pasien::all();
-        return view('admin.pasien.index', compact('pasiens'));
+        $dataPasien = Pasien::orderBy('nama')->get();
+
+        return view('admin.pasien', compact('dataPasien'));
     }
 
     public function store(Request $request)
     {
         $request->validate([
             'nama' => 'required',
+            'nik' => 'required|numeric|digits:16',
             'tempat_lahir' => 'required',
-            'tanggal_lahir' => 'required|date',
+            'tgl_lahir' => 'required|date',
             'jenis_kelamin' => 'required',
             'alamat' => 'required',
             'no_telp' => 'required',
             'nama_pasangan' => 'nullable',
-            'NIK' => 'required|numeric|digits:16',
+            'email' => 'required'
         ]);
 
-        \App\Models\Pasien::create([
+        Pasien::create([
             'nama' => $request->nama,
+            'nik' => $request->nik,
             'tempat_lahir' => $request->tempat_lahir,
-            'tanggal_lahir' => $request->tanggal_lahir,
+            'tgl_lahir' => $request->tgl_lahir,
             'jenis_kelamin' => $request->jenis_kelamin,
             'alamat' => $request->alamat,
             'no_telp' => $request->no_telp,
             'nama_pasangan' => $request->nama_pasangan,
-            'NIK' => $request->NIK,
+            'email' => $request->email,
         ]);
 
         return redirect()->back()->with('success', 'Pasien berhasil ditambahkan.');

@@ -17,15 +17,15 @@
 
     <div class="grid grid-cols-3 gap-6 mb-10">
         <div class="bg-white p-5 rounded shadow">
-            <div class="text-2xl font-bold">0</div>
+            <div class="text-2xl font-bold">{{ $jumlahPasien }}</div>
             <p class="text-gray-600">Jumlah Pasien</p>
         </div>
         <div class="bg-white p-5 rounded shadow">
-            <div class="text-2xl font-bold">0</div>
+            <div class="text-2xl font-bold">{{ $jumlahLayanan }}</div>
             <p class="text-gray-600">Jumlah Layanan</p>
         </div>
         <div class="bg-white p-5 rounded shadow">
-            <div class="text-2xl font-bold">0</div>
+            <div class="text-2xl font-bold">{{ $jumlahAntrian }}</div>
             <p class="text-gray-600">Antrian Pasien</p>
         </div>
     </div>

@@ -101,33 +101,33 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @php $data = [
-                        ['tgl' => '2025-07-10', 'nama' => 'Siti Aminah', 'layanan' => 'Pemeriksaan Kehamilan', 'diagnosa' => 'Kehamilan normal'],
-                        ['tgl' => '2025-07-10', 'nama' => 'Linda Wati', 'layanan' => 'KB Suntik', 'diagnosa' => 'Tidak ada keluhan'],
-                        ['tgl' => '2025-07-09', 'nama' => 'Dewi Lestari', 'layanan' => 'Pemeriksaan Nifas', 'diagnosa' => 'Luka perineum ringan'],
-                        ['tgl' => '2025-07-08', 'nama' => 'Rina Maulida', 'layanan' => 'Imunisasi', 'diagnosa' => 'Imunisasi DPT 1'],
-                        ['tgl' => '2025-07-08', 'nama' => 'Yusuf Ramadhan', 'layanan' => 'Pemeriksaan Umum', 'diagnosa' => 'ISPA ringan'],
-                    ]; @endphp
 
-                    @foreach ($data as $i => $item)
+                    @forelse ($rekamMedis as $index => $rm)
                     <tr>
-                        <td>{{ $i + 1 }}</td>
-                        <td>{{ $item['tgl'] }}</td>
-                        <td>{{ $item['nama'] }}</td>
-                        <td>{{ $item['layanan'] }}</td>
-                        <td>{{ $item['diagnosa'] }}</td>
+                        <td>{{ $index + 1 }}</td>
+                        <td>{{ $rm->created_at->format('d-m-Y') }}</td>
+                        <td>{{ $rm->pendaftaran->layanan ?? '-' }}</td>
+                        <td>{{ $rm->pendaftaran->pasien->nama ?? '-' }}</td>
+                        <td>{{ $rm->keluhan ?? '-' }}</td>
+                        <td>{{ $rm->diagnosis ?? '-' }}</td>
+                        <td>{{ $rm->tindakan ?? '-' }}</td>
+                        <td>{{ $rm->keterangan ?? '-' }}</td>
                         <td>
-                            <a href="#" class="btn btn-sm btn-success me-1" title="Edit">
-                                <i class="bi bi-pencil"></i>
-                            </a>
-                            <form action="#" method="POST" class="d-inline">
-                                <button class="btn btn-sm btn-danger" title="Hapus">
-                                    <i class="bi bi-trash"></i>
-                                </button>
+                            <!-- Tombol edit & hapus -->
+                            <a href="#" class="btn btn-success btn-sm">✏️</a>
+                            <form action="{{ route('rekam_medis.destroy', $rm->id_rm) }}" method="POST" style="display:inline">
+                                @csrf
+                                @method('DELETE')
+                                <button onclick="return confirm('Yakin hapus data?')" class="btn btn-danger btn-sm">🗑️</button>
                             </form>
                         </td>
+
+                        @empty
+                        <tr>
+                            <td colspan="7" class="text-center">Tidak ada data rekam medis</td>
+                        </tr>
                     </tr>
-                    @endforeach
+                    @endforelse 
                 </tbody>
             </table>
 

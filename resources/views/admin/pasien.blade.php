@@ -103,6 +103,7 @@
                         <th>Tanggal Registrasi</th>
                         <th>Nama Lengkap</th>
                         <th>NIK</th>
+                        <th>Tempat Lahir</th>
                         <th>Tgl Lahir</th>
                         <th>Usia</th>
                         <th>Jenis Kelamin</th>
@@ -113,19 +114,20 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @forelse ($pasien as $index => $item)
+                    @forelse ($dataPasien as $index => $pasien)
                     <tr>
                         <td>{{ $index + 1 }}</td>
                         <td>{{ $item->tanggal_registrasi }}</td>
-                        <td>{{ $item->nama_lengkap }}</td>
+                        <td>{{ $item->nama }}</td>
                         <td>{{ $item->nik }}</td>
-                        <td>{{ $item->tanggal_lahir }}</td>
+                        <td>{{ $pasien->tempat_lahir }}</td>
+                        <td>{{ \Carbon\Carbon::parse($pasien->tgl_lahir)->format('d-m-Y') }}</td>
                         <td>{{ \Carbon\Carbon::parse($item->tanggal_lahir)->age }} th</td>
                         <td>{{ $item->jenis_kelamin }}</td>
                         <td>{{ $item->no_telepon }}</td>
                         <td>{{ $item->alamat }}</td>
                         <td>{{ $item->nama_pasangan }}</td>
-                        <td>
+                   
                             <a href="#" class="btn btn-sm btn-info" tittle="Lihat">
                                 <i class="bi bi-eye"></i>
                             </a>

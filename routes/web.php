@@ -6,9 +6,7 @@ use App\HTTP\Controllers\Admin\RekamMedisController;
 use App\HTTP\Controllers\Admin\PasienController;
 
 //route halaman utama
-Route::get('/', function () {
-    return view('admin/dashboard');
-}); 
+Route::get('/', [AdminController::class, 'dashboard']);
 
 // Dashboard & Data
 Route::get('/admin/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
