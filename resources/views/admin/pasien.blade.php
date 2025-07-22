@@ -36,7 +36,7 @@
         <div class="modal fade" id="modalTambahPasien" tabindex="-1" aria-labelledby="modalTambahPasienLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
-            <form action="{{ route('pasien.store') }}" method="POST">
+            <form action="{{ route('admin.pasien.store') }}" method="POST">
                 @csrf
                 <div class="modal-header">
                 <h5 class="modal-title fw-bold" id="modalTambahPasienLabel">Tambah Data Pasien</h5>
@@ -100,7 +100,6 @@
                 <thead class="table-light">
                     <tr>
                         <th>No</th>
-                        <th>Tanggal Registrasi</th>
                         <th>Nama Lengkap</th>
                         <th>NIK</th>
                         <th>Tempat Lahir</th>
@@ -117,20 +116,19 @@
                     @forelse ($dataPasien as $index => $pasien)
                     <tr>
                         <td>{{ $index + 1 }}</td>
-                        <td>{{ $item->tanggal_registrasi }}</td>
-                        <td>{{ $item->nama }}</td>
-                        <td>{{ $item->nik }}</td>
+                        <td>{{ $pasien->nama }}</td>
+                        <td>{{ $pasien->nik }}</td>
                         <td>{{ $pasien->tempat_lahir }}</td>
                         <td>{{ \Carbon\Carbon::parse($pasien->tgl_lahir)->format('d-m-Y') }}</td>
-                        <td>{{ \Carbon\Carbon::parse($item->tanggal_lahir)->age }} th</td>
-                        <td>{{ $item->jenis_kelamin }}</td>
-                        <td>{{ $item->no_telepon }}</td>
-                        <td>{{ $item->alamat }}</td>
-                        <td>{{ $item->nama_pasangan }}</td>
-                   
-                            <a href="#" class="btn btn-sm btn-info" tittle="Lihat">
+                        <td>{{ \Carbon\Carbon::parse($pasien->tgl_lahir)->age }} th</td>
+                        <td>{{ $pasien->jenis_kelamin }}</td>
+                        <td>{{ $pasien->no_telp }}</td>
+                        <td>{{ $pasien->alamat }}</td>
+                        <td>{{ $pasien->nama_pasangan }}</td>
+                        <td>
+                            <button type="button" class="btn btn-info btn-sm" data-bs-toggle="modal" data-bs-target="#lihatPasien{{ $pasien->id }}">
                                 <i class="bi bi-eye"></i>
-                            </a>
+                            </button>
                             <a href="#" class="btn btn-sm btn-warning" tittle="Edit">
                                 <i class="bi bi-pencil"></i>
                             </a>
@@ -153,4 +151,31 @@
         </div>
     </div>
 </div>
+
+<!-- Modal Lihat Detail Pasien -->
+<div class="modal fade" id="lihatPasien{{ $pasien->id }}" tabindex="-1" aria-labelledby="modalLabel{{ $pasien->id }}" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalLabel{{ $pasien->id }}">Detail Data Pasien</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tutup"></button>
+            </div>
+            <div class="modal-body">
+                <table class="table table-bordered">
+                    <tr><th>Nama</th><td>{{ $pasien->nama }}</td></tr>
+                    <tr><th>NIK</th><td>{{ $pasien->nik }}</td></tr>
+                    <tr><th>Usia</th><td>{{ $pasien->usia }}</td></tr>
+                    <tr><th>Jenis Kelamin</th><td>{{ $pasien->jenis_kelamin }}</td></tr>
+                    <tr><th>Tempat Lahir</th><td>{{ $pasien->tempat_lahir }}</td></tr>
+                    <tr><th>Tanggal Lahir</th><td>{{ $pasien->tgl_lahir }}</td></tr>
+                    <tr><th>No. Telepon</th><td>{{ $pasien->no_telp }}</td></tr>
+                    <tr><th>Nama Suami/Istri</th><td>{{ $pasien->nama_pasangan }}</td></tr>
+                    <tr><th>Alamat</th><td>{{ $pasien->alamat }}</td></tr>
+                    <tr><th>Email</th><td>{{ $pasien->email }}</td></tr>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
 @endsection

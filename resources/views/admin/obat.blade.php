@@ -36,7 +36,7 @@
         <div class="modal fade" id="modalTambahObat" tabindex="-1" aria-labelledby="modalTambahObatLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
-            <form action="{{ route('obat.store') }}" method="POST">
+            <form action="{{ route('admin.obat.store') }}" method="POST">
                 @csrf
                 <div class="modal-header">
                 <h5 class="modal-title fw-bold" id="modalTambahObatLabel">Tambah Obat Baru</h5>

@@ -46,11 +46,17 @@
                 <tbody>
                    @foreach ($pendaftaran as $i => $daftar)
                     <tr>
-                        <td>{{ str_pad($i+1, 3, '0', STR_PAD_LEFT) }}</td>
+                        <td>{{ $daftar->no_antrian }}</td>
                         <td>{{ $daftar['nama'] }}</td>
                         <td>{{ $daftar['jenis_layanan'] }}</td>
                         <td>{{ \Carbon\Carbon::parse($daftar['tanggal'])->format('d-m-Y') }}</td>
-                        <td>-</td>
+                        <td>
+                            @if ($daftar->status == 'waiting')
+                                <span class="badge bg-warning">Menunggu</span>
+                            @else
+                                <span class="badge bg-success">Selesai</span>
+                            @endif
+                        </td>
                     </tr>
                     @endforeach
                 </tbody>

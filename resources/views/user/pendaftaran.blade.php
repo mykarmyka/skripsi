@@ -39,7 +39,7 @@ form button.btn-primary:hover {
     <h4 class="fw-bold mb-2">Pendaftaran Layanan Medis</h4>
     <p class="text-muted mb-4">Silakan isi formulir berikut untuk mendaftar layanan medis yang Anda butuhkan</p>
 
-    <form action="#" method="POST">
+    <form action="{{ route('user.pendaftaran.simpan') }}" method="POST">
         @csrf
         <div class="mb-3">
             <label class="form-label fw-semibold">Nama Pasien</label>

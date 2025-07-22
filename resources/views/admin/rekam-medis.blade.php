@@ -35,7 +35,7 @@
         <div class="modal fade" id="modalRekamMedis" tabindex="-1" aria-labelledby="modalRekamMedisLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
-            <form action="{{ route('rekam.store') }}" method="POST">
+            <form action="{{ route('admin.rekam.store') }}" method="POST">
                 @csrf
                 <div class="modal-header">
                 <h5 class="modal-title fw-bold" id="modalRekamMedisLabel">Input Rekam Medis Baru</h5>

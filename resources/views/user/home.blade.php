@@ -4,6 +4,12 @@
 <link rel="stylesheet" href="{{ asset('css/home.css') }}">
 @endpush
 
+@if (session('success'))
+    <div class="alert alert-success">
+        {{ session('success') }}
+    </div>
+@endif
+
 @section('title', 'Home - Klinik')
 
 @section('content')
@@ -42,18 +48,18 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                    <td>2025-1202</td>
-                    <td>Pemeriksaan Umum</td>
-                    <td>12 Februari</td>
-                    <td>0052</td>
-                </tr>
-                <tr>
-                    <td>2025-1705</td>
-                    <td>Pemeriksaan Umum</td>
-                    <td>17 Mei</td>
-                    <td>0021</td>
-                </tr>
+                    @forelse ($riwayat as $data)
+                        <tr>
+                            <td>{{ $data['id'] }}</td>
+                            <td>{{ $data['layanan'] }}</td>
+                            <td>{{ $data['tgl_pendaftaran'] }}</td>
+                            <td>{{ $data['no_antrian'] }}</td>
+                        </tr>
+                    @empty
+                        <tr>
+                            <td colspan="4" class="text-center">Belum ada pendaftaran.</td>
+                        </tr>
+                    @endforelse
                 </tbody>
             </table>
         </div>

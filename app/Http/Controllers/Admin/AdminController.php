@@ -26,37 +26,9 @@ class AdminController extends Controller
         )); 
     }
 
-    public function dataPasien()
+    public function index()
     {
-        // $pasiens = Pasien::all();
-        // return view('admin.pasien');
-        $pasien = [
-        (object)[
-            'id' => 1,
-            'tanggal_registrasi' => '2025-06-07',
-            'nama_lengkap' => 'Ani Lestari',
-            'nik' => '1234567890123456',
-            'tanggal_lahir' => '1990-04-15',
-            'jenis_kelamin' => 'Perempuan',
-            'no_telepon' => '081234567890',
-            'alamat' => 'Jl. Melati No. 10',
-            'nama_pasangan' => 'Budi Santoso',
-        ],
-        (object)[
-            'id' => 2,
-            'tanggal_registrasi' => '2025-06-07',
-            'nama_lengkap' => 'Rina Maulida',
-            'nik' => '2345678901234567',
-            'tanggal_lahir' => '1988-10-01',
-            'jenis_kelamin' => 'Perempuan',
-            'no_telepon' => '082345678901',
-            'alamat' => 'Jl. Kenanga No. 23',
-            'nama_pasangan' => 'Andi Wijaya',
-        ],
-        // Tambahkan lebih banyak data jika perlu
-    ];
-
-    return view('admin.pasien', compact('pasien'));
+        return view('admin.dashboard');
     }
 
     public function dataObat()
@@ -66,29 +38,24 @@ class AdminController extends Controller
 
     public function lihatPendaftaran()
     {
-        // Simulasi data dummy (belum dari DB)
-        $pendaftaran = [
-            [
-                'id' => 1,
-                'nama' => 'Siti Aisyah',
-                'jenis_layanan' => 'Pemeriksaan Kehamilan',
-                'tanggal' => '2025-07-16',
-            ],
-            [
-                'id' => 2,
-                'nama' => 'Dewi Lestari',
-                'jenis_layanan' => 'KB Implan',
-                'tanggal' => '2025-07-16',
-            ],
-            [
-                'id' => 3,
-                'nama' => 'Lina Marlina',
-                'jenis_layanan' => 'Persalinan',
-                'tanggal' => '2025-07-16',
-            ],
-        ];
+        $pendaftaran = PendaftaranLayanan::with('pasien') // pastikan relasi 'pasien' ada
+            ->orderBy('no_antrian')
+            ->get();
 
         return view('admin.layanan', compact('pendaftaran'));
     }
+
+    public function updateStatus(Request $request, $id)
+    {
+        $request->validate([
+            'status' => 'required|in:waiting,done',
+        ]);
+
+        $pendaftaran = Pendaftaran::findOrFail($id);
+        $pendaftaran->status = $request->status;
+        $pendaftaran->save();
+
+        return redirect()->back()->with('success', 'Status berhasil diperbarui!');
+    }    
 
 }

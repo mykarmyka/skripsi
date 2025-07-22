@@ -8,10 +8,9 @@ use App\Models\Pasien;
 
 class PasienController extends Controller
 {
-    public function index()
+    public function dataPasien()
     {
         $dataPasien = Pasien::orderBy('nama')->get();
-
         return view('admin.pasien', compact('dataPasien'));
     }
 
