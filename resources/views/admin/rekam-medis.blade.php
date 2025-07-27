@@ -15,7 +15,7 @@
             <p class="deskripsi">Periksa dan perbarui status pendaftaran layanan medis pasien secara menyeluruh</p>
         </div>
         <div class="d-flex align-items-center">
-            <input type="text" class="form-control me-2" placeholder="Search" style="width: 200px;">
+            
             <span class="me-2">Hello, Admin</span>
             <i class="bi bi-person-circle" style="font-size: 1.5rem;"></i>
         </div>
@@ -27,7 +27,10 @@
                 + Input Rekam Medis Baru
             </button>
             <div>
-                <input type="text" id="search" class="form-control" placeholder="Search">
+                <form action="{{ route('admin.rekam-medis') }}" method="get" class="d-flex align-items-center me-3">
+                    <input type="text" class="form-control me-2" name="search" value="{{ request('search') }}" placeholder="Search" style="width: 200px;">
+                    <button type="submit"></button>
+                </form>
             </div>
         </div>
 

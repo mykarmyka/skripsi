@@ -17,11 +17,11 @@
 
     <div class="d-flex justify-content-between align-items-center mb-4">
         <div>
-            <h2 class="judul-halaman">Selamat Datang, User.</h2>
+            <h2 class="judul-halaman">Selamat Datang, {{ Auth::guard('pasien')->user()->nama }}.</h2>
             <p class="deskripsi">Silakan pilih layanan yang Anda butuhkan atau lihat status pendaftaran Anda di bawah ini.</p>
         </div>
         <div class="d-flex align-items-center">
-            <span class="me-2">Hello, User</span>
+            <span class="me-2">Hello, {{ Auth::guard('pasien')->user()->nama }}</span>
             <i class="bi bi-person-circle" style="font-size: 1.5rem;"></i>
         </div>
     </div>
@@ -30,8 +30,11 @@
         <div class="d-flex justify-content-between align-items-center mb-3">
             <h4><strong>Riwayat Pendaftaran Layanan Medis</strong></h4>
             <div class="search-box d-flex align-items-center">
-                <label for="search" class="me-2">Search</label>
-                <input type="text" id="search" class="form-control" placeholder="...">
+                <form method="GET" action="{{ route('admin.pasien') }}">
+                    <input type="text" name="search" placeholder="Cari nama pasien..." value="{{ request('search') }}">
+                    <button type="submit">Cari</button>
+                </form>
+                <input type="text" id="search" class="form-control" placeholder="Search">
             </div>
         </div>
 
@@ -51,8 +54,9 @@
                     @forelse ($riwayat as $data)
                         <tr>
                             <td>{{ $data['id'] }}</td>
-                            <td>{{ $data['layanan'] }}</td>
+                            <td>{{ $data['jenis_layanan'] }}</td>
                             <td>{{ $data['tgl_pendaftaran'] }}</td>
+                            <td>{{ $data['no_antrian'] }}</td>
                             <td>{{ $data['no_antrian'] }}</td>
                         </tr>
                     @empty

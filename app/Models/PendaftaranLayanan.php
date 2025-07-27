@@ -12,7 +12,6 @@ class PendaftaranLayanan extends Model
     protected $table = 'pendaftaran_layanan';
 
     protected $fillable = [
-    'id_pendaftaran',
     'id_pasien',
     'tgl_pendaftaran',
     'jenis_layanan',
@@ -25,8 +24,5 @@ class PendaftaranLayanan extends Model
         return $this->belongsTo(Pasien::class, 'id_pasien');
     }
 
-    public function layanan()
-    {
-        return $this->belongsTo(Layanan::class);
-    }
+    
 }

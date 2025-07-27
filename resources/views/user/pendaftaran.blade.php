@@ -41,17 +41,14 @@ form button.btn-primary:hover {
 
     <form action="{{ route('user.pendaftaran.simpan') }}" method="POST">
         @csrf
-        <div class="mb-3">
-            <label class="form-label fw-semibold">Nama Pasien</label>
-            <input type="text" name="nama_pasien" class="form-control" required>
-        </div>
+
         <div class="mb-3">
             <label class="form-label fw-semibold">Tanggal Pendaftaran</label>
             <input type="date" name="tgl_pendaftaran" class="form-control" value="{{ date('Y-m-d') }}" required>
         </div>
         <div class="mb-3">
             <label class="form-label fw-semibold">Pilih Layanan</label>
-            <select name="layanan" class="form-select" required>
+            <select name="jenis_layanan" class="form-select" required>
                 <option value="">-- Pilih --</option>
                 <option value="Pemeriksaan Umum">Pemeriksaan Umum</option>
                 <option value="Pemeriksaan Kehamilan">Pemeriksaan Kehamilan</option>

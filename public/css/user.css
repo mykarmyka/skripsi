@@ -194,3 +194,272 @@ body {
     text-align: right;
     margin-bottom: 15px;
 }
+
+/* --- Login Page Specific Styles --- */
+.login-page-container {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #d8edf7;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+    color: #343a40; /* Text dark */
+    /* background-image: linear-gradient(135deg, #f0f4f8 0%, #d9e2ec 100%); */
+}
+
+.login-container {
+    background-color: #ffffff;
+    padding: 40px;
+    border-radius: 12px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 400px;
+    text-align: center;
+    box-sizing: border-box;
+    border: 1px solid #e0e6ed;
+}
+
+.login-container h2 {
+    margin-bottom: 30px;
+    color: #007bff; /* Primary blue */
+    font-weight: bold;
+    font-size: 28px;
+}
+
+.login-form-group { /* Menggunakan nama class unik untuk form group login */
+    margin-bottom: 20px;
+    text-align: left;
+}
+
+.login-form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: #6c757d; /* Secondary gray */
+    font-size: 15px;
+}
+
+.login-form-group input[type="text"] {
+    width: 100%;
+    padding: 12px 15px;
+    border: 1px solid #ced4da; /* Border light */
+    border-radius: 8px;
+    font-size: 16px;
+    box-sizing: border-box;
+    transition: all 0.3s ease;
+}
+
+.login-form-group input[type="text"]:focus {
+    border-color: #4d9fe3; /* Primary blue */
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25);
+    outline: none;
+}
+
+.login-submit-button { /* Menggunakan nama class unik untuk tombol login */
+    background-color: #4d9fe3; /* Primary blue */
+    color: white;
+    padding: 12px 25px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 18px;
+    font-weight: 600;
+    width: 100%;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    box-shadow: 0 4px 10px rgba(0, 123, 255, 0.2);
+}
+
+.login-submit-button:hover {
+    background-color: #367bbd; /* Darker blue */
+    transform: translateY(-2px);
+}
+
+.login-submit-button:active {
+    transform: translateY(0);
+}
+
+.login-register-link { /* Menggunakan nama class unik untuk link registrasi login */
+    margin-top: 25px;
+    font-size: 15px;
+    color: #6c757d; /* Secondary gray */
+}
+
+.login-register-link a {
+    color: #007bff; /* Primary blue */
+    text-decoration: none;
+    font-weight: 600;
+    transition: color 0.3s ease;
+}
+
+.login-register-link a:hover {
+    color: #0056b3;
+    text-decoration: underline;
+}
+
+/* --- Register Page Specific Styles (tambahan untuk user.css) --- */
+.register-page-wrapper {
+    background-color: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 700px; /* Lebar yang lebih besar */
+    margin: auto; /* Menggunakan margin auto untuk centering */
+    box-sizing: border-box;
+    border: 1px solid #e0e6ed;
+    overflow: hidden; /* Memastikan border-radius diterapkan dengan baik */
+}
+
+.register-header {
+    background-color: #367bbd;
+    color: white;
+    padding: 15px 25px;
+    text-align: center;
+}
+
+.register-header h3 {
+    font-weight: 600;
+    font-size: 28px;
+    margin: 0;
+}
+
+.register-body {
+    padding: 35px;
+}
+
+.register-form-group {
+    margin-bottom: 20px;
+}
+
+.register-form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: #343a40;
+    font-size: 16px;
+}
+
+.register-form-group input[type="text"],
+.register-form-group input[type="date"],
+.register-form-group input[type="email"],
+.register-form-group input[type="password"],
+.register-form-group select,
+.register-form-group textarea {
+    width: 100%;
+    padding: 12px 15px;
+    border: 1px solid #ced4da;
+    border-radius: 8px;
+    font-size: 14px;
+    box-sizing: border-box;
+    transition: all 0.3s ease;
+}
+
+.register-form-group input:focus,
+.register-form-group select:focus,
+.register-form-group textarea:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25);
+    outline: none;
+}
+
+.register-form-group textarea {
+    resize: vertical;
+    min-height: 100px;
+}
+
+.register-footer {
+    padding: 25px 35px;
+    border-top: 1px solid #e9ecef;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.register-button-group {
+    display: flex;
+    gap: 10px;
+}
+
+.register-submit-button,
+.register-cancel-button {
+    padding: 12px 25px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 18px;
+    font-weight: 600;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.register-submit-button {
+    background-color: #007bff;
+    color: white;
+    box-shadow: 0 4px 10px rgba(0, 123, 255, 0.2);
+}
+
+.register-submit-button:hover {
+    background-color: #367bbd;
+    transform: translateY(-2px);
+}
+
+.register-submit-button:active {
+    transform: translateY(0);
+}
+
+.register-cancel-button {
+    background-color: #6c757d;
+    color: white;
+    box-shadow: 0 4px 10px rgba(108, 117, 125, 0.2);
+}
+
+.register-cancel-button:hover {
+    background-color: #5a6268;
+    transform: translateY(-2px);
+}
+
+.register-cancel-button:active {
+    transform: translateY(0);
+}
+
+.register-login-link-footer {
+    font-size: 16px;
+    color: #6c757d;
+}
+
+.register-login-link-footer a {
+    color: #007bff;
+    text-decoration: none;
+    font-weight: 600;
+    transition: color 0.3s ease;
+}
+
+.register-login-link-footer a:hover {
+    color: #0056b3;
+    text-decoration: underline;
+}
+
+/* Penyesuaian untuk tampilan responsif */
+@media (max-width: 768px) {
+    .register-page-wrapper {
+        margin: 20px; /* Sedikit margin di layar kecil */
+    }
+    .register-header h2 {
+        font-size: 28px;
+    }
+    .register-body {
+        padding: 25px;
+    }
+    .register-footer {
+        flex-direction: column; /* Link dan tombol di baris terpisah */
+        align-items: flex-start;
+        gap: 15px;
+    }
+    .register-button-group {
+        width: 100%;
+        justify-content: flex-end; /* Tombol tetap di kanan atau sesuaikan */
+    }
+    .register-submit-button,
+    .register-cancel-button {
+        width: 100%; /* Tombol penuh lebar di layar kecil */
+    }
+}

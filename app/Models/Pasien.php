@@ -15,6 +15,9 @@ class Pasien extends Authenticatable
 
     protected $primaryKey = 'id_pasien';
 
+    public $incrementing = true; 
+    protected $keyType = 'int'; 
+
     protected $fillable = [
         'nama', 
         'nik',
@@ -26,6 +29,20 @@ class Pasien extends Authenticatable
         'nama_pasangan', 
         'email',
     ];
+
+    protected $hidden = [
+        'password',
+    ];
+
+    public function getAuthIdentifierName()
+    {
+        return 'id_pasien';
+    }
+
+    public function getAuthIdentifier()
+    {
+        return $this->id_pasien;
+    }
 }
 
 

@@ -23,25 +23,43 @@ class RekamMedisController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'tanggal_kunjungan' => 'required|date',
-            'pasien_id' => 'required|exists:pasien,id',
-            'jenis_layanan' => 'required|string|max:255',
+            'id_rm' => 'required|',
+            'id_pasien' => 'required|exists:pasien,id',
+            'id_pendaftaran' => 'required|',
+            'id_admin' => 'required',
+            'tgl_rm' => 'required|date',
             'anamnesa' => 'required|text|',
             'diagnosa' => 'required|text|',
             'terapi' => 'required|text',
-            'ket' => 'required|text',
+            'keterangan' => 'required|text',
         ]);
 
         RekamMedis::create([
-            'tanggal_kunjungan' => $request->tanggal_kunjungan,
-            'pasien_id' => $request->pasien_id,
-            'jenis_layanan' => $request->jenis_layanan,
+            'id_rm' => $request->id_rm,
+            'id_pasien' => $request->id_pasien,
+            'id_pendaftaran' => $request->id_pendaftaran,
+            'id_admin' => $request->id_admin,
+            'tgl_rm' => $request->tgl_rm,
             'anamnesa' => $request->anamnesa,
             'diagnosa' => $request->diagnosa,
             'terapi' => $request->terapi,
-            'ket' => $request->ket,
+            'keterangan' => $request->keterangan,
         ]);
 
         return redirect()->route('admin.rekam-medis')->with('success', 'Rekam medis berhasil ditambahkan!');
+    }
+
+    public function pencarian(Request $request)
+    {
+        $query = RekamMedis::query();
+
+        if ($request->has('search')) {
+            $search = $request->search;
+            $query->where('nama', 'tgl_rm', 'id_admin', 'like', "%$search%");
+        }
+
+        $rekamMedis = $query->get();
+
+        return view('admin.rekam-medis', compact('rekamMedis'));
     }
 }

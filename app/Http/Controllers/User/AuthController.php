@@ -59,6 +59,12 @@ class AuthController extends Controller
         'nik' => 'required|digits:16|exists:pasien,nik',
         ]);
 
+        // Tambahan: logout guard dulu biar session bersih
+        Auth::guard('pasien')->logout();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
+
         $pasien = Pasien::where('nik', $request->nik)->first();
 
         if ($pasien) {

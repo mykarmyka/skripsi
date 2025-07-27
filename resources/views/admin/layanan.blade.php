@@ -47,9 +47,9 @@
                    @foreach ($pendaftaran as $i => $daftar)
                     <tr>
                         <td>{{ $daftar->no_antrian }}</td>
-                        <td>{{ $daftar['nama'] }}</td>
-                        <td>{{ $daftar['jenis_layanan'] }}</td>
-                        <td>{{ \Carbon\Carbon::parse($daftar['tanggal'])->format('d-m-Y') }}</td>
+                        <td>{{ $daftar->pasien->nama }}</td>
+                        <td>{{ $data->jenis_layanan }}</td>
+                        <td>{{ \Carbon\Carbon::parse($daftar['tgl_pendaftaran'])->format('d-m-Y') }}</td>
                         <td>
                             @if ($daftar->status == 'waiting')
                                 <span class="badge bg-warning">Menunggu</span>

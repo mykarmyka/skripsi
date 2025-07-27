@@ -42,4 +42,18 @@ class PasienController extends Controller
 
         return redirect()->back()->with('success', 'Pasien berhasil ditambahkan.');
     }
+
+    public function pencarian(Request $request)
+    {
+        $query = Pasien::query();
+
+        if ($request->has('search')) {
+            $search = $request->search;
+            $query->where('nama', 'like', "%$search%");
+        }
+
+        $dataPasien = $query->get();
+
+        return view('admin.pasien', compact('dataPasien'));
+    }
 }

@@ -12,7 +12,7 @@ class ProfilController extends Controller
     public function index()
     {
         // Ambil data pasien yang sedang login
-        $pasien = Auth::guard('pasien')->user();
+        $pasien = Auth::guard('pasien')->user()->id_pasien;
         return view('user.profil', compact('pasien'));
     }
 
@@ -22,10 +22,11 @@ class ProfilController extends Controller
             'nama' => 'required|string|max:255',
             'alamat' => 'nullable|string|max:255',
             'no_telp' => 'nullable|string|max:20',
-            // tambah validasi sesuai kebutuhan
+            
         ]);
 
-        $pasien = Auth::guard('pasien')->user();
+        $pasien = Auth::guard('pasien')->user()->id_pasien;
+
 
         $pasien->nama = $request->nama;
         $pasien->alamat = $request->alamat;

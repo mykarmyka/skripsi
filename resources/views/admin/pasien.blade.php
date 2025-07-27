@@ -2,9 +2,12 @@
 
 @push('styles')
 <link rel="stylesheet" href="{{ asset('css/pasien.css') }}">
+('script')
 @endpush
 
-@section('title', 'Data Pasien')
+@php use Carbon\Carbon; @endphp
+
+@section('title-pasien', 'Data Pasien')
 
 @section('content')
 <div class="container">
@@ -15,7 +18,10 @@
             <p class='mb-4'>Periksa dan perbarui data pasien secara menyeluruh</p>
         </div>
         <div class="d-flex align-items-center">
-            <input type="text" class="form-control me-2" placeholder="Search" style="width: 200px;">
+            <form action="{{ route('admin.pasien') }}" method="get" class="d-flex align-items-center me-3">
+                <input type="text" class="form-control me-2" name="search" value="{{ request('search') }}" placeholder="Search" style="width: 200px;">
+                <button type="submit"></button>
+            </form>
             <span class="me-2">Hello, Admin</span>
             <i class="bi bi-person-circle" style="font-size: 1.5rem;"></i>
         </div>
@@ -164,7 +170,7 @@
                 <table class="table table-bordered">
                     <tr><th>Nama</th><td>{{ $pasien->nama }}</td></tr>
                     <tr><th>NIK</th><td>{{ $pasien->nik }}</td></tr>
-                    <tr><th>Usia</th><td>{{ $pasien->usia }}</td></tr>
+                    <tr><th>Usia</th><td>{{ Carbon::parse($pasien->tgl_lahir)->age }} tahun</td></tr>
                     <tr><th>Jenis Kelamin</th><td>{{ $pasien->jenis_kelamin }}</td></tr>
                     <tr><th>Tempat Lahir</th><td>{{ $pasien->tempat_lahir }}</td></tr>
                     <tr><th>Tanggal Lahir</th><td>{{ $pasien->tgl_lahir }}</td></tr>

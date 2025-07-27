@@ -41,7 +41,7 @@ class UserController extends Controller
 
     public function profil()
     {
-        $pasien = Pasien::where('id', Auth::guard('pasien')->id())->firstOrFail();
+        $pasien = Auth::guard('pasien')->user();
         return view('user.profil', compact('pasien'));
     }
 
@@ -59,11 +59,26 @@ class UserController extends Controller
             'email' => 'required|email|max:255',
         ]);
 
-        $pasien = Pasien::where('id', Auth::guard('pasien')->id())->firstOrFail();
+        $pasien = Auth::guard('pasien')->user();
         $pasien->update($request->all());
 
         return redirect()->route('user.profil')->with('success', 'Profil berhasil diperbarui.');
     }
+
+    public function pencarian(Request $request)
+    {
+        $query = Pasien::query();
+
+        if ($request->has('search')) {
+            $search = $request->search;
+            $query->where('nama', 'like', "%$search%");
+        }
+
+        $dataPasien = $query->get();
+
+        return view('user.home', compact('dataPasien'));
+    }
+
 
     
 

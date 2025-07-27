@@ -63,7 +63,7 @@
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
             
             <!-- Logout form -->
-            <form action="{{ route('logout') }}" method="POST">
+            <form action="{{ route('user.logout') }}" method="POST">
                 @csrf
                 <button type="submit" class="btn btn-danger">Ya, Logout</button>
             </form>

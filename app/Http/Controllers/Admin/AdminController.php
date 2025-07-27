@@ -56,6 +56,16 @@ class AdminController extends Controller
         $pendaftaran->save();
 
         return redirect()->back()->with('success', 'Status berhasil diperbarui!');
-    }    
+    }   
+    
+    public function logout(Request $request)
+    {
+        auth()->logout();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
+        return redirect('/login');
+    }
+
 
 }

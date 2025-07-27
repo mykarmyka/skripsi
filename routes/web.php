@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\RekamMedisController;
 use App\Http\Controllers\Admin\PasienController;
+use App\Http\Controllers\Admin\ObatController;
 
 use App\Http\Controllers\User\ProfilController;
 use App\Http\Controllers\User\AuthController;
@@ -25,16 +26,21 @@ Route::prefix('admin')->name('admin.')->group(function () {
     // Kelola Pasien (ADMIN)
     Route::get('/pasien', [PasienController::class, 'dataPasien'])->name('pasien');
     Route::post('/pasien', [PasienController::class, 'store'])->name('pasien.store');
+    Route::get('/pasien', [PasienController::class, 'pencarian'])->name('pasien');
 
     // Layanan
     Route::get('/layanan', [AdminController::class, 'lihatPendaftaran'])->name('layanan');
 
     // Rekam Medis
     Route::get('/rekam-medis', [RekamMedisController::class, 'index'])->name('rekam-medis');
-    Route::post('/admin/rekam-medis', [RekamMedisController::class, 'store'])->name('rekam.store');
+    Route::post('/rekam-medis', [RekamMedisController::class, 'store'])->name('rekam.store');
+    Route::get('/rekam-medis', [RekamMedisController::class, 'pencarian'])->name('rekam-medis');
 
     // Route (web.php)
     Route::post('/pendaftaran/{id}/update-status', [PendaftaranController::class, 'updateStatus'])->name('updateStatus');
+
+    Route::post('/logout', [AdminController::class, 'logout'])->name('logout');
+
 
 });    
 
@@ -49,27 +55,17 @@ Route::prefix('user')->name('user.')->group(function () {
 
     Route::middleware('auth:pasien')->group(function () {
         Route::get('/home', [UserController::class, 'home'])->name('home');
+        Route::get('/home', [UserController::class, 'pencarian'])->name('home');
         Route::get('/profil', [UserController::class, 'profil'])->name('profil');
-        Route::put('/profil', [UserController::class, 'updateProfil'])->name('updateProfil');
+        Route::post('/profil/update', [ProfilController::class, 'update'])->name('updateProfil');
+        Route::put('/profil', [UserController::class, 'updateProfil'])->name('updateProfil2');
         Route::get('/pendaftaran', [UserController::class, 'formPendaftaran'])->name('pendaftaran');
-        Route::post('/pendaftaran/simpan', [PendaftaranController::class, 'simpanPendaftaran'])->name('pendaftaran.simpan');
+        Route::get('/pendaftaran', [PendaftaranController::class, 'pencarian'])->name('pendaftaran');
+        Route::post('/pendaftaran/simpan', [PendaftaranController::class, 'simpanPendaftaran'])
+        ->middleware('auth:pasien')
+        ->name('pendaftaran.simpan');
+        
     });
 });
 
-// Home
-Route::get('/user/home', [UserController::class, 'home'])->name('user.home');
-Route::post('/user/pendaftaran/simpan', [PendaftaranController::class, 'simpanPendaftaran'])->name('user.pendaftaran.simpan');
 
-// Pendaftaran
-Route::get('/user/pendaftaran', [UserController::class, 'formPendaftaran'])->name('user.pendaftaran');
-
-// Profil
-
-// Logout
-Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
-
-
-Route::middleware(['auth:pasien'])->group(function () {
-    Route::get('/user/profil', [ProfilController::class, 'index'])->name('user.profil');
-    Route::post('/user/profil/update', [ProfilController::class, 'update'])->name('user.profil.update');
-});

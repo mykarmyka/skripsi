@@ -15,7 +15,6 @@
             <p class="deskripsi">Periksa dan perbarui status pendaftaran layanan medis pasien secara menyeluruh</p>
         </div>
         <div class="d-flex align-items-center">
-            <input type="text" class="form-control me-2" placeholder="Search" style="width: 200px;">
             <span class="me-2">Hello, Admin</span>
             <i class="bi bi-person-circle" style="font-size: 1.5rem;"></i>
         </div>
@@ -27,8 +26,7 @@
                 + Tambah Obat Baru
             </button>
             <div class="search-box d-flex align-items-center">
-                <label for="search" class="me-2">Search</label>
-                <input type="text" id="search" class="form-control" placeholder="Cari obat...">
+                <input type="text" id="search" class="form-control" placeholder="Search">
             </div>
         </div>
 

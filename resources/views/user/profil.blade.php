@@ -7,11 +7,11 @@ input[readonly] {
 }
 @endpush
 
-@if(Auth::guard('pasien')->check())
+<!-- @if(Auth::guard('pasien')->check())
     <div class="alert alert-success">Pasien sudah login.</div>
 @else
     <div class="alert alert-danger">Belum login sebagai pasien!</div>
-@endif
+@endif -->
 
 @section('content')
 <div class="d-flex flex-column align-items-center mb-4">
@@ -31,7 +31,7 @@ input[readonly] {
             'Tanggal Lahir' => 'tgl_lahir',
             'Jenis Kelamin' => 'jenis_kelamin',
             'Alamat' => 'alamat',
-            'No. Telpon' => 'telp',
+            'No. Telpon' => 'no_telp',
             'Nama Pasangan' => 'nama_pasangan',
             'NIK' => 'nik',
             'Email' => 'email',
