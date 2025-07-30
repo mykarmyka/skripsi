@@ -12,10 +12,7 @@ use App\Http\Controllers\User\PendaftaranController;
 use App\Http\Controllers\User\UserController;
 
 
-Route::get('/login', fn() => redirect()->route('user.login'))->name('login');
-
-//route halaman utama
-Route::get('/', [AdminController::class, 'dashboard']);
+Route::get('/', fn() => redirect()->route('user.login'));
 
 Route::prefix('admin')->name('admin.')->group(function () {
     // Dashboard & Data
@@ -38,7 +35,6 @@ Route::prefix('admin')->name('admin.')->group(function () {
 
     // Route (web.php)
     Route::post('/pendaftaran/{id}/update-status', [PendaftaranController::class, 'updateStatus'])->name('updateStatus');
-
     Route::post('/logout', [AdminController::class, 'logout'])->name('logout');
 
 
@@ -55,12 +51,10 @@ Route::prefix('user')->name('user.')->group(function () {
 
     Route::middleware('auth:pasien')->group(function () {
         Route::get('/home', [UserController::class, 'home'])->name('home');
-        Route::get('/home', [UserController::class, 'pencarian'])->name('home');
         Route::get('/profil', [UserController::class, 'profil'])->name('profil');
-        Route::post('/profil/update', [ProfilController::class, 'update'])->name('updateProfil');
-        Route::put('/profil', [UserController::class, 'updateProfil'])->name('updateProfil2');
+        Route::post('/profil/update', [ProfilController::class, 'update'])->name('profilUpdate');
+        Route::put('/profil', [UserController::class, 'updateProfil'])->name('updateProfil');
         Route::get('/pendaftaran', [UserController::class, 'formPendaftaran'])->name('pendaftaran');
-        Route::get('/pendaftaran', [PendaftaranController::class, 'pencarian'])->name('pendaftaran');
         Route::post('/pendaftaran/simpan', [PendaftaranController::class, 'simpanPendaftaran'])
         ->middleware('auth:pasien')
         ->name('pendaftaran.simpan');

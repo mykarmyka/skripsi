@@ -2,7 +2,7 @@
 
 @push('styles')
 <link rel="stylesheet" href="{{ asset('css/pasien.css') }}">
-('script')
+
 @endpush
 
 @php use Carbon\Carbon; @endphp
@@ -18,10 +18,6 @@
             <p class='mb-4'>Periksa dan perbarui data pasien secara menyeluruh</p>
         </div>
         <div class="d-flex align-items-center">
-            <form action="{{ route('admin.pasien') }}" method="get" class="d-flex align-items-center me-3">
-                <input type="text" class="form-control me-2" name="search" value="{{ request('search') }}" placeholder="Search" style="width: 200px;">
-                <button type="submit"></button>
-            </form>
             <span class="me-2">Hello, Admin</span>
             <i class="bi bi-person-circle" style="font-size: 1.5rem;"></i>
         </div>
@@ -34,7 +30,11 @@
             </button>
             <div>
                 <!-- <label for="search">Search</label> -->
-                <input type="text" id="search" class="form-control" placeholder="Cari pasien...">
+                 <form action="{{ route('admin.pasien') }}" method="get" class="d-flex align-items-center me-3">
+                    <input type="text" class="form-control me-2" name="search" value="{{ request('search') }}" placeholder="Search">
+                    <button type="submit"></button>
+                </form>
+                
             </div>
         </div>  
 

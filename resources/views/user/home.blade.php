@@ -30,10 +30,6 @@
         <div class="d-flex justify-content-between align-items-center mb-3">
             <h4><strong>Riwayat Pendaftaran Layanan Medis</strong></h4>
             <div class="search-box d-flex align-items-center">
-                <form method="GET" action="{{ route('admin.pasien') }}">
-                    <input type="text" name="search" placeholder="Cari nama pasien..." value="{{ request('search') }}">
-                    <button type="submit">Cari</button>
-                </form>
                 <input type="text" id="search" class="form-control" placeholder="Search">
             </div>
         </div>
@@ -43,7 +39,7 @@
             <table class="table table-bordered table-striped text-center">
                 <thead>
                     <tr>
-                        <th>No. Registrasi</th>
+                        
                         <th>Layanan</th>
                         <th>Tanggal Daftar</th>
                         <th>Antrian</th>
@@ -53,10 +49,9 @@
                 <tbody>
                     @forelse ($riwayat as $data)
                         <tr>
-                            <td>{{ $data['id'] }}</td>
+                            
                             <td>{{ $data['jenis_layanan'] }}</td>
                             <td>{{ $data['tgl_pendaftaran'] }}</td>
-                            <td>{{ $data['no_antrian'] }}</td>
                             <td>{{ $data['no_antrian'] }}</td>
                         </tr>
                     @empty
@@ -70,17 +65,12 @@
 
         <div class="d-flex justify-content-end mt-3">
             <nav>
-                <ul class="pagination">
-                    <li class="page-item disabled">
-                        <a class="page-link rounded" href="#" tabindex="-1" aria-disabled="true">&laquo;</a>
-                    </li>
-                    <li class="page-item active">
-                        <a class="page-link rounded bg-primary text-white border-0" href="#">1</a>
-                    </li>
-                    <li class="page-item disabled">
-                        <a class="page-link rounded" href="#">&raquo;</a>
-                    </li>
-                </ul>
+                <div class="pagination">
+                    <a href="#" class="btn-nav"><i class="bi bi-chevron-double-left"></i></a>
+                    <span class="page-number">1</span>
+                    <a href="#" class="btn-nav"><i class="bi bi-chevron-double-right"></i></a>
+                </div>
+                
             </nav>
         </div>
     </div>

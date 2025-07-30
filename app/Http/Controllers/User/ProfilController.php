@@ -20,18 +20,28 @@ class ProfilController extends Controller
     {
         $request->validate([
             'nama' => 'required|string|max:255',
+            'tempat_lahir' => 'required|string|max:255',
+            'tgl_lahir' => 'required|date',
+            'jenis_kelamin' => 'required|in:Laki-laki,Perempuan',
             'alamat' => 'nullable|string|max:255',
-            'no_telp' => 'nullable|string|max:20',
-            
+            'no_telp' => 'nullable|string|max:15',
+            'nik' => 'required|numeric|digits:16',
+            'email' => 'required|email|max:255',
         ]);
 
-        $pasien = Auth::guard('pasien')->user()->id_pasien;
+        $pasien = Auth::guard('pasien')->user();
 
-
-        $pasien->nama = $request->nama;
-        $pasien->alamat = $request->alamat;
-        $pasien->no_telp = $request->no_telp;
-        $pasien->save();
+         $pasien->update([
+            'nama' => $request->nama,
+            'tempat_lahir' => $request->tempat_lahir,
+            'tgl_lahir' => $request->tgl_lahir,
+            'jenis_kelamin' => $request->jenis_kelamin,
+            'alamat' => $request->alamat,
+            'no_telp' => $request->no_telp, 
+            'nama_pasangan' => $request->nama_pasangan,
+            'nik' => $request->nik,
+            'email' => $request->email,
+        ]);
 
         return redirect()->back()->with('success', 'Profil berhasil diperbarui.');
     }

@@ -33,18 +33,6 @@ class PendaftaranController extends Controller
         return redirect()->route('user.home')->with('success', 'Pendaftaran berhasil disimpan ke database!');
     }
 
-    public function pencarian(Request $request)
-    {
-        $query = PendaftaranLayanan::query();
-
-        if ($request->has('search')) {
-            $search = $request->search;
-            $query->where('nama', 'tgl_pendaftaran', 'no_antrian', 'like', "%$search%");
-        }
-
-        $rekamMedis = $query->get();
-
-        return view('user.pendaftaran', compact('pendaftaran'));
-    }
+    
 
 }

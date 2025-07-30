@@ -159,3 +159,27 @@ body {
     text-align: center;
     font-weight: bold;
 }
+
+/* Pagination */
+.pagination {
+    display: flex;
+    justify-content: center;
+    margin-top: 16px;
+    align-items: center;
+    gap: 8px;
+}
+
+.page-number {
+    background-color: #4d9fe3;
+    color: white;
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-weight: bold;
+}
+
+.btn-nav {
+    padding: 6px 10px;
+    background-color: #dcefff;
+    border-radius: 6px;
+    color: #333;
+}

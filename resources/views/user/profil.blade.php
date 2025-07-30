@@ -90,7 +90,7 @@ input[readonly] {
                         </div>
                         <div class="col-md-6">
                             <label class="form-label">No. Telpon</label>
-                            <input type="text" name="telp" class="form-control" pattern="08[0-9]{8,11}" value="{{ $profil->telp }}" required>
+                            <input type="text" name="no_telp" class="form-control" pattern="08[0-9]{8,11}" value="{{ $profil->telp }}" required>
                         </div>
                         <div class="col-md-6">
                             <label class="form-label">Nama Pasangan</label>

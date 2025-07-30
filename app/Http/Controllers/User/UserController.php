@@ -25,20 +25,6 @@ class UserController extends Controller
         return view('user.pendaftaran');
     }
 
-    public function submitPendaftaran(Request $request) {
-        $request->validate([
-            'jenis_layanan' => 'required|string',]);
-
-            $pendaftaran = new PendaftaranLayanan();
-            $pendaftaran->id_pasien = Auth::guard('pasien')->id();
-            $pendaftaran->layanan = $request->layanan;
-            $pendaftaran->tanggal_daftar = now();
-            $pendaftaran->status = 'waiting'; // default status
-            $pendaftaran->save();
-
-            return redirect()->route('user.home')->with('success', 'Pendaftaran berhasil.');
-    }
-
     public function profil()
     {
         $pasien = Auth::guard('pasien')->user();
@@ -65,19 +51,7 @@ class UserController extends Controller
         return redirect()->route('user.profil')->with('success', 'Profil berhasil diperbarui.');
     }
 
-    public function pencarian(Request $request)
-    {
-        $query = Pasien::query();
-
-        if ($request->has('search')) {
-            $search = $request->search;
-            $query->where('nama', 'like', "%$search%");
-        }
-
-        $dataPasien = $query->get();
-
-        return view('user.home', compact('dataPasien'));
-    }
+    
 
 
     
