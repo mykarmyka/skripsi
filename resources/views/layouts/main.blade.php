@@ -47,6 +47,11 @@
                 <i class="bi bi-file-earmark-medical me-2"></i>Rekam Medis
             </a>
 
+            <a href="{{ route('admin.laporan') }}" 
+                class="block px-3 py-2 rounded hover:bg-blue-200 {{ request()->routeIs('admin.laporan') ? 'bg-blue-200 font-semibold text-blue-800' : '' }}">
+                <i class="bi bi-file-earmark-text me-2"></i></i>Laporan
+            </a>
+
             <a href="#" 
                 class="block px-3 py-2 rounded hover:bg-blue-200" data-bs-toggle="modal" data-bs-target="#logoutModal">
                 <i class="bi bi-box-arrow-right"></i>Logout

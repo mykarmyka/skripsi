@@ -33,6 +33,12 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::post('/rekam-medis', [RekamMedisController::class, 'store'])->name('rekam.store');
     Route::get('/rekam-medis', [RekamMedisController::class, 'pencarian'])->name('rekam-medis');
 
+    // Laporan
+    Route::get('/laporan', [AdminController::class, 'laporan'])->name('laporan');
+    Route::post('/laporan/filter', [AdminController::class, 'filterLaporan'])->name('laporan.filter');
+    Route::get('/laporan/cetak', [AdminController::class, 'cetakLaporan'])->name('laporan.cetak');
+
+
     // Route (web.php)
     Route::post('/pendaftaran/{id}/update-status', [PendaftaranController::class, 'updateStatus'])->name('updateStatus');
     Route::post('/logout', [AdminController::class, 'logout'])->name('logout');
