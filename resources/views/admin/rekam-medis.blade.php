@@ -27,9 +27,11 @@
                 + Input Rekam Medis Baru
             </button>
             <div>
-                <form action="{{ route('admin.rekam-medis') }}" method="get" class="d-flex align-items-center me-3">
-                    <input type="text" class="form-control me-2" name="search" value="{{ request('search') }}" placeholder="Search" style="width: 200px;">
-                    <button type="submit"></button>
+                <form action="{{ route('admin.rekam-medis') }}" method="GET" class="d-flex align-items-center me-3">
+                    <div class="input-group">
+                            <input type="text" name="keyword" class="form-control me-2" placeholder="Search" value="{{ request('keyword') }}" style="width: 200px;">
+                            <button class="btn btn-primary" type="submit">Cari</button>
+                    </div>
                 </form>
             </div>
         </div>
@@ -40,6 +42,11 @@
             <div class="modal-content">
             <form action="{{ route('admin.rekam.store') }}" method="POST">
                 @csrf
+                <input type="hidden" name="id_admin" value="{{ Auth::user()->id }}">
+                <input type="hidden" name="id_pendaftaran" value="{{ $idPendaftaran ?? '' }}">
+                <input type="hidden" name="id_rm" value="{{ Str::uuid() }}">
+
+
                 <div class="modal-header">
                 <h5 class="modal-title fw-bold" id="modalRekamMedisLabel">Input Rekam Medis Baru</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tutup"></button>
@@ -47,13 +54,15 @@
                 <div class="modal-body">
                 <div class="mb-3">
                     <label for="tanggal_kunjungan" class="form-label">Tanggal Kunjungan</label>
-                    <input type="date" name="tanggal_kunjungan" class="form-control" required>
+                    <input type="date" name="tgl_rm" class="form-control" required>
                 </div>
                 <div class="mb-3">
                     <label for="pasien_id" class="form-label">Nama Pasien</label>
                     <select name="pasien_id" class="form-control" required>
                     <option value="">-- Pilih Pasien --</option>
-                    
+                    @foreach ($pasien as $item)
+                        <option value="{{ $item->id }}">{{ $item->nama }}</option>
+                    @endforeach
                     </select>
                 </div>
                 <div class="mb-3">
@@ -61,7 +70,7 @@
                     <input type="text" name="jenis_layanan" class="form-control" required>
                 </div>
                 <div class="mb-3">
-                    <label for="diagnosa" class="form-label">Anamnesa</label>
+                    <label for="anamnesa" class="form-label">Anamnesa</label>
                     <input type="text" name="anamnesa" class="form-control" required>
                 </div>
                 <div class="mb-3">
@@ -69,12 +78,12 @@
                     <input type="text" name="diagnosa" class="form-control" required>
                 </div>
                 <div class="mb-3">
-                    <label for="diagnosa" class="form-label">Terapi</label>
+                    <label for="terapi" class="form-label">Terapi</label>
                     <input type="text" name="terapi" class="form-control" required>
                 </div>
 
                 <div class="mb-3">
-                    <label for="diagnosa" class="form-label">Keterangan</label>
+                    <label for="keterangan" class="form-label">Keterangan</label>
                     <input type="text" name="keterangan" class="form-control" required>
                 </div>
 
@@ -110,7 +119,7 @@
                         <td>{{ $index + 1 }}</td>
                         <td>{{ $rm->created_at->format('d-m-Y') }}</td>
                         <td>{{ $rm->pendaftaran->layanan ?? '-' }}</td>
-                        <td>{{ $rm->pendaftaran->pasien->nama ?? '-' }}</td>
+                        <td>{{ $rm->pasien->nama ?? '-' }}</td>
                         <td>{{ $rm->keluhan ?? '-' }}</td>
                         <td>{{ $rm->diagnosis ?? '-' }}</td>
                         <td>{{ $rm->tindakan ?? '-' }}</td>

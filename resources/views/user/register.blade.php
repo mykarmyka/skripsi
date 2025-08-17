@@ -71,16 +71,18 @@
                     <label for="password_confirmation">Konfirmasi Password:</label>
                     <input type="password" id="password_confirmation" name="password_confirmation" placeholder="Ulangi password Anda" required>
                 </div>
+
+                <div class="register-footer">
+                    <p class="register-login-link-footer">Sudah punya akun? <a href="{{ route('user.login') }}">Login di sini</a></p>
+                    <div class="register-button-group">
+                        {{-- Anda bisa menambahkan tombol batal jika diperlukan --}}
+                        {{-- <button type="button" class="register-cancel-button" onclick="history.back()">Batal</button> --}}
+                        <button type="submit" class="register-submit-button">Daftar Akun</button>
+                    </div>
+                </div>
             </form>
         </div>
-        <div class="register-footer">
-            <p class="register-login-link-footer">Sudah punya akun? <a href="{{ route('user.login') }}">Login di sini</a></p>
-            <div class="register-button-group">
-                {{-- Anda bisa menambahkan tombol batal jika diperlukan --}}
-                {{-- <button type="button" class="register-cancel-button" onclick="history.back()">Batal</button> --}}
-                <button type="submit" form="registerForm" class="register-submit-button">Daftar Akun</button>
-            </div>
-        </div>
+        
     </div>
 </body>
 </html>

@@ -5,13 +5,26 @@ namespace App\Http\Controllers\Admin;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\RekamMedis;
+use App\Models\Pasien;
 
 class RekamMedisController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $rekamMedis = RekamMedis::with(['pasien', 'pendaftaran'])->orderByDesc('tgl_rm')->get();
-        return view('admin.rekam-medis', compact('rekamMedis'));
+        $keyword = $request->input('keyword');
+
+        $rekamMedis = RekamMedis::with(['pasien', 'pendaftaran'])
+            ->when($keyword, function ($query) use ($keyword) {
+                $query->whereHas('pasien', function ($q) use ($keyword) {
+                    $q->where('nama', 'like', "%{$keyword}%");
+                })->orWhere('tgl_rm', 'like', "%{$keyword}%");
+            })
+            ->orderByDesc('tgl_rm')
+            ->get();
+
+        $pasien = Pasien::orderBy('nama')->get();
+
+        return view('admin.rekam-medis', compact('rekamMedis', 'pasien'));
     }
 
     public function destroy($id)
@@ -28,10 +41,10 @@ class RekamMedisController extends Controller
             'id_pendaftaran' => 'required|',
             'id_admin' => 'required',
             'tgl_rm' => 'required|date',
-            'anamnesa' => 'required|text|',
-            'diagnosa' => 'required|text|',
-            'terapi' => 'required|text',
-            'keterangan' => 'required|text',
+            'anamnesa' => 'required|string|',
+            'diagnosa' => 'required|string|',
+            'terapi' => 'required|string',
+            'keterangan' => 'required|string',
         ]);
 
         RekamMedis::create([
@@ -55,11 +68,17 @@ class RekamMedisController extends Controller
 
         if ($request->has('search')) {
             $search = $request->search;
-            $query->where('nama', 'tgl_rm', 'id_admin', 'like', "%$search%");
+            $query->where(function ($q) use ($search) {
+                $q->where('id_admin', 'like', "%$search%")
+                ->orWhere('tgl_rm', 'like', "%$search%")
+                ->orWhere('nama', 'like', "%$search%");
+            });
         }
 
         $rekamMedis = $query->get();
+        $pasien = Pasien::orderBy('nama')->get();
 
-        return view('admin.rekam-medis', compact('rekamMedis'));
+        return view('admin.rekam-medis', compact('rekamMedis','pasien'));
     }
+
 }

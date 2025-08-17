@@ -97,3 +97,108 @@ h4, h5 {
 .btn {
     min-width: 100px;
 }
+
+/* --- Login Page Specific Styles --- */
+.login-page-container {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #d8edf7;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+    color: #343a40; 
+}
+
+.login-container {
+    background-color: #ffffff;
+    padding: 40px;
+    border-radius: 12px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 400px;
+    text-align: center;
+    box-sizing: border-box;
+    border: 1px solid #e0e6ed;
+}
+
+.login-container h2 {
+    margin-bottom: 30px;
+    color: #007bff; /* Primary blue */
+    font-weight: bold;
+    font-size: 28px;
+}
+
+.login-form-group { /* Menggunakan nama class unik untuk form group login */
+    margin-bottom: 20px;
+    text-align: left;
+}
+
+.login-form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: #6c757d; /* Secondary gray */
+    font-size: 15px;
+}
+
+.login-form-group input[type="text"],
+.login-form-group input[type="username"],
+.login-form-group input[type="password"] {
+    width: 100%;
+    padding: 12px 15px;
+    border: 1px solid #ced4da; 
+    border-radius: 8px;
+    font-size: 16px;
+    box-sizing: border-box;
+    transition: all 0.3s ease;
+}
+
+.login-form-group input[type="text"]:focus,
+.login-form-group input[type="username"]:focus,
+.login-form-group input[type="password"]:focus {
+    border-color: #4d9fe3; 
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25);
+    outline: none;
+}
+
+.login-submit-button { 
+    background-color: #4d9fe3; 
+    color: white;
+    padding: 12px 25px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 18px;
+    font-weight: 600;
+    width: 100%;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    box-shadow: 0 4px 10px rgba(0, 123, 255, 0.2);
+}
+
+.login-submit-button:hover {
+    background-color: #367bbd; 
+    transform: translateY(-2px);
+}
+
+.login-submit-button:active {
+    transform: translateY(0);
+}
+
+.login-register-link { /* Menggunakan nama class unik untuk link registrasi login */
+    margin-top: 25px;
+    font-size: 15px;
+    color: #6c757d; /* Secondary gray */
+}
+
+.login-register-link a {
+    color: #007bff; /* Primary blue */
+    text-decoration: none;
+    font-weight: 600;
+    transition: color 0.3s ease;
+}
+
+.login-register-link a:hover {
+    color: #0056b3;
+    text-decoration: underline;
+}

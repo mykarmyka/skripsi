@@ -11,6 +11,8 @@ class RekamMedis extends Model
 
     protected $table = 'rekam_medis';
     protected $primaryKey = 'id_rm';
+    public $incrementing = false;
+    protected $keyType = 'string';
 
     protected $fillable = [
         'id_pasien', 'id_pendaftaran', 'id_admin', 'tgl_rm',

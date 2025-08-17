@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\Pasien;
 
+
 class PasienController extends Controller
 {
     public function dataPasien()
@@ -56,4 +57,5 @@ class PasienController extends Controller
 
         return view('admin.pasien', compact('dataPasien'));
     }
+
 }

@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
-class Pasien extends Authenticatable
+class PasienLogin extends Authenticatable
 {
     use Notifiable;
 
@@ -19,3 +19,5 @@ class Pasien extends Authenticatable
 
     protected $hidden = ['password'];
 }
+
+

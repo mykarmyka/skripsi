@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Barryvdh\DomPDF\Facade\Pdf;
 use App\Http\Controllers\Controller;
 use App\Models\Pasien;
@@ -61,11 +62,11 @@ class AdminController extends Controller
     
     public function logout(Request $request)
     {
-        auth()->logout();
+        auth()->guard('admin')->logout();
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        return redirect('/login');
+        return redirect()->route('admin.login')->with('success', 'Berhasil logout.');
     }
 
     
@@ -136,6 +137,27 @@ class AdminController extends Controller
         return view('admin.laporan', compact('kunjunganPerBulan', 'kunjunganPerMinggu'));
     }
 
+    public function showLoginForm()
+    {
+        return view('admin.login');
+    }
 
+    public function login(Request $request)
+    {   
+        Auth::guard('pasien')->logout();
+
+        $credentials = $request->only('username', 'password');
+
+        if (Auth::guard('admin')->attempt($credentials)) {
+            $user = Auth::guard('admin')->user();
+            // Cek role bidan atau staff
+            if ($user->hasRole('bidan') || $user->hasRole('staff')) {
+                return redirect()->route('admin.dashboard');
+            } 
+        }
+
+        Auth::guard('admin')->logout();
+        return redirect()->route('admin.login')->with('error', 'Login gagal. Cek kembali username dan password.');
+    }
 
 }
