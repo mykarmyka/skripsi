@@ -25,6 +25,11 @@ class UserController extends Controller
         return view('user.pendaftaran');
     }
 
+    public function formPendaftaranPersalinan() 
+    {
+        return view('user.pendaftaran-persalinan');
+    }
+
     public function profil()
     {
         $pasien = Auth::guard('pasien')->user();

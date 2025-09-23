@@ -3,7 +3,10 @@
 <head>
     <title>Register Pasien</title>
     <link rel="stylesheet" href="{{ asset('css/user.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
+
+
 <body class="login-page-container">
    
     <div class="register-page-wrapper">
@@ -64,12 +67,24 @@
 
                 <div class="register-form-group">
                     <label for="password">Password:</label>
-                    <input type="password" id="password" name="password" placeholder="Buat password minimal 8 karakter" required>
+                    <div style="position: relative;">
+                        <input type="password" id="password" name="password" placeholder="Buat password minimal 8 karakter" required>
+                        <span toggle="#password" class="toggle-password" 
+                            style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); cursor: pointer;">
+                            <i class="fa fa-eye"></i>
+                        </span>
+                    </div>
                 </div>
 
                 <div class="register-form-group">
                     <label for="password_confirmation">Konfirmasi Password:</label>
-                    <input type="password" id="password_confirmation" name="password_confirmation" placeholder="Ulangi password Anda" required>
+                    <div style="position: relative;">
+                        <input type="password" id="password_confirmation" name="password_confirmation" placeholder="Ulangi password Anda" required>
+                        <span toggle="#password_confirmation" class="toggle-password" 
+                            style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); cursor: pointer;">
+                            <i class="fa fa-eye"></i>
+                        </span>
+                    </div>
                 </div>
 
                 <div class="register-footer">
@@ -84,5 +99,24 @@
         </div>
         
     </div>
+
+    <script>
+    document.querySelectorAll(".toggle-password").forEach(function(element) {
+        element.addEventListener("click", function() {
+            const input = document.querySelector(this.getAttribute("toggle"));
+            const icon = this.querySelector("i");
+            if (input.type === "password") {
+                input.type = "text";
+                icon.classList.add("fa-eye");
+                icon.classList.remove("fa-eye-slash");
+            } else {
+                input.type = "password";
+                icon.classList.add("fa-eye-slash");
+                icon.classList.remove("fa-eye");
+            }
+        });
+    })    
+    </script>
+
 </body>
 </html>

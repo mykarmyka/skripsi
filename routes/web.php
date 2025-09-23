@@ -47,6 +47,8 @@ Route::prefix('admin')->name('admin.')->group(function () {
         // Layanan
         Route::get('/layanan', [AdminController::class, 'lihatPendaftaran'])->name('layanan');
         Route::post('/pendaftaran/{id}/update-status', [PendaftaranController::class, 'updateStatus'])->name('updateStatus');
+        Route::resource('pendaftaran-persalinan', PendaftaranPersalinanController::class)
+         ->except(['show', 'edit']); // kita ga pakai show/edit
 
         // Rekam Medis
         Route::get('/rekam-medis', [RekamMedisController::class, 'index'])->name('rekam-medis');
@@ -83,5 +85,8 @@ Route::prefix('user')->name('user.')->group(function () {
         Route::get('/pendaftaran', [UserController::class, 'formPendaftaran'])->name('pendaftaran');
         Route::post('/pendaftaran/simpan', [PendaftaranController::class, 'simpanPendaftaran'])
             ->name('pendaftaran.simpan');
+        Route::get('/pendaftaran-persalinan', [UserController::class, 'formPendaftaranPersalinan'])->name('pendaftaran-persalinan');
+        Route::post('/pendaftaran-persalinan/simpan', [PendaftaranPersalinanController::class, 'simpanPersalinan'])
+            ->name('pendaftaran-persalinan.simpan');
     });
 });

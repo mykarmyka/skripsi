@@ -26,7 +26,12 @@
 
             <a href="{{ route('user.pendaftaran') }}"
                 class="block px-3 py-2 rounded hover:bg-blue-200 {{ request()->routeIs('user.pendaftaran') ? 'bg-blue-200 font-semibold text-blue-800' : '' }}">
-                <i class="bi bi-clipboard-check"></i> Pendaftaran Layanan
+                <i class="bi bi-clipboard-check"></i> Layanan Umum
+            </a>
+
+            <a href="{{ route('user.pendaftaran-persalinan') }}"
+                class="block px-3 py-2 rounded hover:bg-blue-200 {{ request()->routeIs('user.pendaftaran-persalinan') ? 'bg-blue-200 font-semibold text-blue-800' : '' }}">
+                <i class="bi bi-clipboard-check"></i> Persalinan
             </a>
 
             <a href="{{ route('user.profil') }}"
