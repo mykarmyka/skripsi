@@ -5,8 +5,12 @@ namespace App\Http\Controllers\User;
 use App\Http\Controllers\Controller;
 use App\Models\Pasien;
 use App\Models\PendaftaranLayanan;
+use App\Models\JenisLayanan;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Spatie\Permission\Models\Role;
+use Spatie\Permission\Models\Permission;
+
 
 class UserController extends Controller
 {
@@ -22,12 +26,14 @@ class UserController extends Controller
 
     public function formPendaftaran() 
     {
-        return view('user.pendaftaran');
+        $jenis = JenisLayanan::all();
+        return view('user.pendaftaran', compact ('jenis'));
     }
 
     public function formPendaftaranPersalinan() 
     {
-        return view('user.pendaftaran-persalinan');
+        $jenis = JenisLayanan::all();
+        return view('user.pendaftaran-persalinan', compact('jenis'));
     }
 
     public function profil()

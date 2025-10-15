@@ -48,7 +48,7 @@
                     <tr>
                         <td>{{ $daftar->no_antrian }}</td>
                         <td>{{ $daftar->pasien->nama }}</td>
-                        <td>{{ $daftar->jenis_layanan }}</td>
+                        <td>{{ $daftar->jenisLayanan->nama_layanan ?? '-' }}</td>
                         <td>{{ \Carbon\Carbon::parse($daftar['tgl_pendaftaran'])->format('d-m-Y') }}</td>
                         <td>
                             @if ($daftar->status == 'waiting')

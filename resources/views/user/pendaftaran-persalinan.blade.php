@@ -55,9 +55,12 @@ form button.btn-primary:hover {
         </div>
         <div class="mb-3">
             <label class="form-label fw-semibold">Layanan</label>
-            <select name="jenis_layanan" class="form-select" required>
+            <input type="hidden" name="id_pasien" value="{{ Auth::guard('pasien')->user()->id_pasien }}">
+            <select name="id_jenis_layanan" class="form-select" required>
                 <option value="">-- Pilih --</option>
-                <option value="Persalinan">Persalinan</option>
+                @foreach($jenis as $j)
+                    <option value="{{ $j->id }}">{{ $j->nama_layanan }}</option>
+                @endforeach
                 
             </select>
 

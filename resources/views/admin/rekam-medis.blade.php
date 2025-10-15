@@ -42,9 +42,9 @@
             <div class="modal-content">
             <form action="{{ route('admin.rekam.store') }}" method="POST">
                 @csrf
-                <input type="hidden" name="id_admin" value="{{ Auth::user()->id }}">
-                <input type="hidden" name="id_pendaftaran" value="{{ $idPendaftaran ?? '' }}">
-                <input type="hidden" name="id_rm" value="{{ Str::uuid() }}">
+                <input type="hidden" name="id_admin" value="{{ Auth::check() ? Auth::user()->id : null }}">
+    
+                <input type="hidden" name="id_rm" value="{{ \Illuminate\Support\Str::uuid() }}">
 
 
                 <div class="modal-header">
@@ -57,17 +57,30 @@
                     <input type="date" name="tgl_rm" class="form-control" required>
                 </div>
                 <div class="mb-3">
-                    <label for="pasien_id" class="form-label">Nama Pasien</label>
-                    <select name="pasien_id" class="form-control" required>
+                    <label for="id_pendaftaran" class="form-label">Nama Pasien</label>
+                    <select name="id_pendaftaran" id="id_pendaftaran" class="form-control" required>
                     <option value="">-- Pilih Pasien --</option>
-                    @foreach ($pasien as $item)
-                        <option value="{{ $item->id }}">{{ $item->nama }}</option>
-                    @endforeach
+                    @forelse ($pendaftaran as $p)
+                        <option value="{{ $p->id_pendaftaran}}" 
+                            data-layanan="{{ $p->jenisLayanan->nama_layanan }}"
+                            data-id-pasien="{{ $p->id_pasien }}"
+                            data-id-jenis="{{ $p->id_jenis_layanan }}">
+                            {{ $p->pasien->nama }} - (Antrian {{ $p->no_antrian }})
+                        </option>
+                    @empty
+                        <option value="">Tidak ada pendaftaran hari ini</option>
+                    @endforelse
                     </select>
                 </div>
+
+                <!-- hidden untuk backward compatibility kalau store butuh id_pasien / id_jenis_layanan -->
+                <input type="hidden" name="id_pasien" id="id_pasien" value="">
+                <input type="hidden" name="id_jenis_layanan" id="id_jenis_layanan" value="">
+
+
                 <div class="mb-3">
-                    <label for="jenis_layanan" class="form-label">Jenis Layanan</label>
-                    <input type="text" name="jenis_layanan" class="form-control" required>
+                    <label for="id_jenis_layanan" class="form-label">Jenis Layanan</label>
+                    <input type="text" name="id_jenis_layanan" class="form-control" required>
                 </div>
                 <div class="mb-3">
                     <label for="anamnesa" class="form-label">Anamnesa</label>
@@ -151,6 +164,36 @@
         </div>
     </div>
 </div>
+
+<script>
+const dataMap = {};
+@isset($pendaftaran)
+    @foreach($pendaftaran as $p)
+        dataMap["{{ $p->id_pendaftaran ?? $p->id }}"] = {
+            layanan: "{{ addslashes($p->jenislayanan->nama_layanan ?? '') }}",
+            id_pasien: "{{ $p->id_pasien ?? '' }}",
+            id_jenis: "{{ $p->id_jenis_layanan ?? '' }}"
+        };
+    @endforeach
+@endisset
+
+select && select.addEventListener('change', function () {
+    const key = this.value;
+    const data = dataMap[key] || {};
+    layananInput.value = data.layanan || '';
+    idPasienInput.value = data.id_pasien || '';
+    idJenisInput.value = data.id_jenis || '';
+});
+
+document.getElementById('id_pendaftaran').addEventListener('change', function () {
+    const selected = this.options[this.selectedIndex];
+    document.getElementById('id_jenis_layanan').value = selected.dataset.layanan || '';
+    document.getElementById('id_pasien').value = selected.dataset.idPasien || '';
+});
+
+</script>
+
+
 @endsection
 
 

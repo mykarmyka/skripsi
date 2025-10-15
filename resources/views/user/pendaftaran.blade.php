@@ -55,15 +55,12 @@ form button.btn-primary:hover {
         </div>
         <div class="mb-3">
             <label class="form-label fw-semibold">Pilih Layanan</label>
-            <select name="jenis_layanan" class="form-select" required>
+            <input type="hidden" name="id_pasien" value="{{ Auth::guard('pasien')->user()->id_pasien }}">
+            <select name="id_jenis_layanan" class="form-control" required>
                 <option value="">-- Pilih --</option>
-                <option value="Pemeriksaan Umum">Pemeriksaan Umum</option>
-                <option value="Pemeriksaan Kehamilan">Pemeriksaan Kehamilan</option>
-                <option value="Persalinan">Persalinan</option>
-                <option value="KB">KB</option>
-                <option value="Imunisasi">Nifas</option>
-                <option value="Massage & Baby Spa">Massage & Baby Spa</option>
-                <option value="Lainnya">Lainnya</option>
+                @foreach($jenis as $j)
+                    <option value="{{ $j->id }}">{{ $j->nama_layanan }}</option>
+                @endforeach
             </select>
 
         </div>

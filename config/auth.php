@@ -14,8 +14,8 @@ return [
     */
 
     'defaults' => [
-        'guard' => env('AUTH_GUARD', 'web'),
-        'passwords' => env('AUTH_PASSWORD_BROKER', 'users'),
+        'guard' => 'admin',
+        'passwords' => 'users',
         
 
     ],
@@ -50,7 +50,7 @@ return [
 
         'admin' => [
             'driver' => 'session',
-            'provider' => 'users', 
+            'provider' => 'admin', 
         ],
     ],
 
@@ -80,6 +80,12 @@ return [
         'pasiens' => [ 
             'driver' => 'eloquent',
             'model' => App\Models\Pasien::class,
+        ],
+
+        'admin' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\Admin::class,
+            'table' => 'admin'
         ],
 
         // 'users' => [

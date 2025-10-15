@@ -33,7 +33,7 @@ input[readonly] {
             'Alamat' => 'alamat',
             'No. Telpon' => 'no_telp',
             'Nama Pasangan' => 'nama_pasangan',
-            'NIK' => 'nik',
+            'nik' => 'nik',
             'Email' => 'email',
         ] as $label => $field)
             <div class="mb-3 row">
@@ -97,7 +97,7 @@ input[readonly] {
                             <input type="text" name="nama_pasangan" class="form-control" value="{{ $profil->nama_pasangan }}">
                         </div>
                         <div class="col-md-6">
-                            <label class="form-label">NIK</label>
+                            <label class="form-label">nik</label>
                             <input type="text" name="nik" class="form-control" pattern="[0-9]{16}" value="{{ $profil->nik }}" required>
                         </div>
                         <div class="col-md-6">

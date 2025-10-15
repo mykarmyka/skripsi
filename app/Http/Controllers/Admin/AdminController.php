@@ -9,6 +9,10 @@ use App\Http\Controllers\Controller;
 use App\Models\Pasien;
 use App\Models\PendaftaranLayanan;
 use App\Models\RekamMedis;
+use Spatie\Permission\Models\Role;
+use Spatie\Permission\Models\Permission;
+
+
 
 class AdminController extends Controller
 {
@@ -40,9 +44,9 @@ class AdminController extends Controller
 
     public function lihatPendaftaran()
     {
-        $pendaftaran = PendaftaranLayanan::with('pasien') // pastikan relasi 'pasien' ada
-            ->orderBy('no_antrian')
-            ->get();
+        $pendaftaran = PendaftaranLayanan::with('pasien', 'jenisLayanan') 
+            ->orderBy('tgl_pendaftaran', 'desc')
+            ->paginate(10);
 
         return view('admin.layanan', compact('pendaftaran'));
     }
@@ -53,30 +57,21 @@ class AdminController extends Controller
             'status' => 'required|in:waiting,done',
         ]);
 
-        $pendaftaran = Pendaftaran::findOrFail($id);
-        $pendaftaran->status = $request->status;
+        $pendaftaran = PendaftaranLayanan::findOrFail($id);
+        $pendaftaran->status = $pendaftaran->status === 'waiting' ? 'done' : 'waiting';
         $pendaftaran->save();
 
         return redirect()->back()->with('success', 'Status berhasil diperbarui!');
     }   
     
-    public function logout(Request $request)
-    {
-        auth()->guard('admin')->logout();
-        $request->session()->invalidate();
-        $request->session()->regenerateToken();
-
-        return redirect()->route('admin.login')->with('success', 'Berhasil logout.');
-    }
-
     
     public function laporan(Request $request)
     {
-        $query = RekamMedis::with(['pasien', 'jenis_layanan']);
+        $query = RekamMedis::with(['pasien', 'pendaftaran.jenisLayanan']);
 
         // Filter berdasarkan jenis layanan (jika dipilih)
         if ($request->filled('jenis_layanan')) {
-            $query->whereHas('jenis_layanan', function ($q) use ($request) {
+            $query->whereHas('pendaftaran.jenisLayanan', function ($q) use ($request) {
                 $q->where('nama', $request->jenis_layanan);
             });
         }
@@ -109,7 +104,7 @@ class AdminController extends Controller
 
     public function cetakLaporan(Request $request)
     {
-        $dataKunjungan = RekamMedis::with(['pasien', 'jenis_layanan'])
+        $dataKunjungan = RekamMedis::with(['pasien', 'pendaftaran.jenisLayanan'])
             // Tambahkan filter sesuai kebutuhan kamu di sini...
             ->orderBy('tgl_rm', 'desc')
             ->get();
@@ -137,6 +132,49 @@ class AdminController extends Controller
         return view('admin.laporan', compact('kunjunganPerBulan', 'kunjunganPerMinggu'));
     }
 
+    public function ajax(Request $request)
+    {
+        $query = RekamMedis::with(['pasien', 'pendaftaran.jenisLayanan']);
+
+        if ($request->layanan) {
+            $query->whereHas('pendaftaran.jenisLayanan', function($q) use ($request) {
+                $q->where('nama', $request->layanan);
+            });
+        }
+
+        if ($request->tanggal) {
+            $query->whereDate('tgl_rm', $request->tanggal);
+        }
+
+        $data = $query->get();
+
+        return view('admin.laporan._table', compact('data'));
+    }
+
+    public function pdf(Request $request)
+    {
+        $query = RekamMedis::with(['pasien', 'pendaftaran.jenisLayanan']);
+
+        if ($request->layanan) {
+            $query->whereHas('pendaftaran.jenisLayanan', function($q) use ($request) {
+                $q->where('nama', $request->layanan);
+            });
+        }
+
+        if ($request->tanggal) {
+            $query->whereDate('tgl_rm', $request->tanggal);
+        }
+
+        $data = $query->get();
+
+        $pdf = Pdf::loadView('admin.laporan_cetak', compact('data'))
+                ->setPaper('a4', 'landscape');
+
+        return $pdf->download('laporan-kunjungan.pdf');
+    }
+
+
+
     public function showLoginForm()
     {
         return view('admin.login');
@@ -144,20 +182,28 @@ class AdminController extends Controller
 
     public function login(Request $request)
     {   
-        Auth::guard('pasien')->logout();
 
-        $credentials = $request->only('username', 'password');
+        $request->validate([
+            'email' => 'required|email',
+            'password' => 'required|string',
+        ]);
+
+        $credentials = $request->only('email', 'password');
 
         if (Auth::guard('admin')->attempt($credentials)) {
             $user = Auth::guard('admin')->user();
+
             // Cek role bidan atau staff
             if ($user->hasRole('bidan') || $user->hasRole('staff')) {
                 return redirect()->route('admin.dashboard');
-            } 
+            } else {
+                Auth::guard('admin')->logout();
+                return redirect()->route('admin.login')->with('error', 'Akses ditolak. Role tidak valid.');
+            }
         }
 
-        Auth::guard('admin')->logout();
-        return redirect()->route('admin.login')->with('error', 'Login gagal. Cek kembali username dan password.');
+        
+        return redirect()->route('admin.login')->with('error', 'Login gagal. Cek kembali email dan password.');
     }
 
 }

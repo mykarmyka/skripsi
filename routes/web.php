@@ -2,6 +2,8 @@
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\TestEmail;
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\RekamMedisController;
 use App\Http\Controllers\Admin\PasienController;
@@ -46,18 +48,22 @@ Route::prefix('admin')->name('admin.')->group(function () {
 
         // Layanan
         Route::get('/layanan', [AdminController::class, 'lihatPendaftaran'])->name('layanan');
-        Route::post('/pendaftaran/{id}/update-status', [PendaftaranController::class, 'updateStatus'])->name('updateStatus');
-        Route::resource('pendaftaran-persalinan', PendaftaranPersalinanController::class)
-         ->except(['show', 'edit']); // kita ga pakai show/edit
+        Route::get('/pendaftaran/{id}/update-status', [AdminController::class, 'updateStatus'])->name('updateStatus'); 
+        Route::post('pendaftaran/simpan', [PendaftaranController::class, 'simpanPendaftaran'])->name('pendaftaran.simpan');
+        Route::post('pendaftaran/persalinan', [PendaftaranController::class, 'simpanPersalinan'])->name('pendaftaran.persalinan');
 
         // Rekam Medis
         Route::get('/rekam-medis', [RekamMedisController::class, 'index'])->name('rekam-medis');
         Route::post('/rekam-medis', [RekamMedisController::class, 'store'])->name('rekam.store');
+        Route::get('/rekam-medis', [RekamMedisController::class, 'createRekamMedis'])->name('rekammedis');
 
         // Laporan
         Route::get('/laporan', [AdminController::class, 'laporan'])->name('laporan');
         Route::post('/laporan/filter', [AdminController::class, 'filterLaporan'])->name('laporan.filter');
-        Route::get('/laporan/cetak', [AdminController::class, 'cetakLaporan'])->name('laporan.cetak');
+        Route::get('/laporan/ajax', [AdminController::class, 'ajax'])->name('laporan.ajax');
+        Route::get('/laporan/pdf', [AdminController::class, 'pdf'])->name('laporan.pdf');
+
+
 
         // Logout
         Route::post('/logout', [AdminController::class, 'logout'])->name('logout');
@@ -73,7 +79,6 @@ Route::prefix('user')->name('user.')->group(function () {
     Route::get('/register', [AuthController::class, 'showRegister'])->name('register');
     Route::post('/register', [AuthController::class, 'register'])->name('register.submit');
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
-
     // ROUTE PASIEN YANG SUDAH LOGIN
     Route::middleware('auth:pasien')->group(function () {
         Route::get('/home', [UserController::class, 'home'])->name('home');
@@ -86,7 +91,14 @@ Route::prefix('user')->name('user.')->group(function () {
         Route::post('/pendaftaran/simpan', [PendaftaranController::class, 'simpanPendaftaran'])
             ->name('pendaftaran.simpan');
         Route::get('/pendaftaran-persalinan', [UserController::class, 'formPendaftaranPersalinan'])->name('pendaftaran-persalinan');
-        Route::post('/pendaftaran-persalinan/simpan', [PendaftaranPersalinanController::class, 'simpanPersalinan'])
-            ->name('pendaftaran-persalinan.simpan');
+        
     });
+});
+
+Route::get('/test-email', function () {
+    Mail::raw('Email ini berhasil dikirim dari Laravel 🎉', function ($message) {
+        $message->to('madonnahr20@gmail.com')
+                ->subject('Tes Email Laravel');
+    });
+    return 'Email percobaan sudah dikirim!';
 });

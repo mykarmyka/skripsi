@@ -55,7 +55,7 @@
                 </div>
                 
                 <div class="col-md-6">
-                    <label class="form-label">NIK</label>
+                    <label class="form-label">nik</label>
                     <input type="text" name="nik" class="form-control" required>
                 </div>
 
@@ -106,8 +106,9 @@
                 <thead class="table-light">
                     <tr>
                         <th>No</th>
+                        <th>No. RM</th>
                         <th>Nama Lengkap</th>
-                        <th>NIK</th>
+                        <th>nik</th>
                         <th>Tempat Lahir</th>
                         <th>Tgl Lahir</th>
                         <th>Usia</th>
@@ -122,6 +123,7 @@
                     @forelse ($dataPasien as $index => $pasien)
                     <tr>
                         <td>{{ $index + 1 }}</td>
+                        <td>{{ $pasien->id_rm }}</td>
                         <td>{{ $pasien->nama }}</td>
                         <td>{{ $pasien->nik }}</td>
                         <td>{{ $pasien->tempat_lahir }}</td>
@@ -169,7 +171,7 @@
             <div class="modal-body">
                 <table class="table table-bordered">
                     <tr><th>Nama</th><td>{{ $pasien->nama }}</td></tr>
-                    <tr><th>NIK</th><td>{{ $pasien->nik }}</td></tr>
+                    <tr><th>nik</th><td>{{ $pasien->nik }}</td></tr>
                     <tr><th>Usia</th><td>{{ Carbon::parse($pasien->tgl_lahir)->age }} tahun</td></tr>
                     <tr><th>Jenis Kelamin</th><td>{{ $pasien->jenis_kelamin }}</td></tr>
                     <tr><th>Tempat Lahir</th><td>{{ $pasien->tempat_lahir }}</td></tr>

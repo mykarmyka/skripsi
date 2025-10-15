@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+
 
 class LoginController extends Controller
 {
@@ -15,32 +17,37 @@ class LoginController extends Controller
     public function login(Request $request)
     {
         $request->validate([
-            'username'    => 'required|string',
+            'email'    => 'required|string|email',
             'password' => 'required|string',
         ]);
 
-        $credentials = $request->only('username', 'password');
+        $credentials = $request->only('email', 'password');
 
         if (Auth::attempt($credentials)) {
+            $request->session()->regenerate();
+
             $user = Auth::user();
+
             // Redirect berdasarkan role
-            if ($user->role === 'bidan') {
-                return redirect()->route('bidan.dashboard');
-            } elseif ($user->role === 'staff') {
-                return redirect()->route('staff.dashboard');
+            if ($user->hasRole('bidan') || $user->hasRole('staff')) {
+                return redirect()->route('admin.dashboard');
             } else {
                 Auth::logout();
-                return back()->withErrors(['username' => 'Role tidak dikenali.']);
+                return back()->withErrors(['email' => 'Role tidak dikenali.']);
             }
         }
 
-        return back()->withErrors(['username' => 'Email atau password salah.']);
+        return back()->withErrors(['email' => 'Email atau password salah.']);
     }
 
     public function logout(Request $request)
     {
-        Auth::logout();
+        auth()->guard('admin')->logout();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
         return redirect()->route('admin.login')->with('success', 'Berhasil logout.');
     }
+
 
 }

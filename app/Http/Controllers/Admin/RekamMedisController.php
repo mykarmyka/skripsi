@@ -6,6 +6,10 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\RekamMedis;
 use App\Models\Pasien;
+use App\Models\PendaftaranLayanan;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
+
 
 class RekamMedisController extends Controller
 {
@@ -24,7 +28,12 @@ class RekamMedisController extends Controller
 
         $pasien = Pasien::orderBy('nama')->get();
 
-        return view('admin.rekam-medis', compact('rekamMedis', 'pasien'));
+        $pendaftaran = PendaftaranLayanan::with(['pasien'])
+            ->where('status', 'waiting')
+            ->orderBy('tgl_pendaftaran', 'desc')
+            ->get();
+
+        return view('admin.rekam-medis', compact('rekamMedis', 'pasien', 'pendaftaran'));
     }
 
     public function destroy($id)
@@ -36,10 +45,9 @@ class RekamMedisController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'id_rm' => 'required|',
-            'id_pasien' => 'required|exists:pasien,id',
-            'id_pendaftaran' => 'required|',
-            'id_admin' => 'required',
+            
+            'id_pendaftaran' => 'required|exists:pendaftaran_layanan,id_pendaftaran',
+
             'tgl_rm' => 'required|date',
             'anamnesa' => 'required|string|',
             'diagnosa' => 'required|string|',
@@ -47,11 +55,23 @@ class RekamMedisController extends Controller
             'keterangan' => 'required|string',
         ]);
 
+        $pendaftaran = \App\Models\PendaftaranLayanan::with(['pasien','jenisLayanan'])
+            ->findOrFail($request->id_pendaftaran);
+
+        $last = RekamMedis::orderBy('id_rm', 'desc')->first();
+        if ($last) {
+            $lastNumber = intval(substr($last->id_rm, 2)); // ambil angka setelah "RM"
+            $newId = 'RM' . str_pad($lastNumber + 1, 4, '0', STR_PAD_LEFT);
+        } else {
+            $newId = 'RM0001';
+        }
+        
         RekamMedis::create([
-            'id_rm' => $request->id_rm,
-            'id_pasien' => $request->id_pasien,
+            'id_rm' => $newId,
+            'id_pasien' => $pendaftaran->id_pasien,
             'id_pendaftaran' => $request->id_pendaftaran,
-            'id_admin' => $request->id_admin,
+            'id_admin' => Auth::check() ? Auth::user()->id : null,
+            'id_jenis_layanan' => $pendaftaran->id_jenis_layanan,
             'tgl_rm' => $request->tgl_rm,
             'anamnesa' => $request->anamnesa,
             'diagnosa' => $request->diagnosa,
@@ -79,6 +99,18 @@ class RekamMedisController extends Controller
         $pasien = Pasien::orderBy('nama')->get();
 
         return view('admin.rekam-medis', compact('rekamMedis','pasien'));
+    }
+
+    public function createRekamMedis()
+    {
+        $today = Carbon::today();
+
+        $pendaftaran = PendaftaranLayanan::with(['pasien', 'jenisLayanan'])
+            ->whereDate('tgl_pendaftaran', $today)
+            ->orderBy('no_antrian', 'asc')
+            ->get();
+
+        return view('admin.rekam-medis', compact('pendaftaran'));
     }
 
 }

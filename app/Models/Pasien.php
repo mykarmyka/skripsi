@@ -19,6 +19,7 @@ class Pasien extends Authenticatable
     protected $keyType = 'int'; 
 
     protected $fillable = [
+        'id_rm',
         'nama', 
         'nik',
         'tempat_lahir',
@@ -28,6 +29,7 @@ class Pasien extends Authenticatable
         'no_telp', 
         'nama_pasangan', 
         'email',
+        
     ];
 
     protected $hidden = [
@@ -42,6 +44,18 @@ class Pasien extends Authenticatable
     public function getAuthIdentifier()
     {
         return $this->id_pasien;
+    }
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::created(function ($pasien) {
+            if (empty($pasien->id_rm) || $pasien->id_rm === 'RM0000') {
+                $pasien->id_rm = 'RM' . str_pad((string) $pasien->id_pasien, 4, '0', STR_PAD_LEFT);
+                $pasien->save();
+            }
+        });
     }
 }
 

@@ -4,6 +4,9 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\PendaftaranLayanan;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Auth;
 
 class RekamMedis extends Model
 {
@@ -15,8 +18,16 @@ class RekamMedis extends Model
     protected $keyType = 'string';
 
     protected $fillable = [
-        'id_pasien', 'id_pendaftaran', 'id_admin', 'tgl_rm',
-        'anamnesa', 'diagnosa', 'terapi', 'keterangan'
+        'id_rm',
+        'id_pasien', 
+        'id_pendaftaran', 
+        'id_admin',
+        'id_jwenis_layanan',
+        'tgl_rm',
+        'anamnesa', 
+        'diagnosa', 
+        'terapi', 
+        'keterangan'
     ];
     
     public function pasien() {
@@ -28,11 +39,8 @@ class RekamMedis extends Model
     }
 
     public function pendaftaran() {
-        return $this->belongsTo(Pendaftaran::class, 'id_pendaftaran');
+        return $this->belongsTo(PendaftaranLayanan::class, 'id_pendaftaran', 'id_pendaftaran');
     }
 
-    public function layanan()
-    {
-        return $this->belongsTo(PendaftaranLayanan::class);
-    }
+    
 }

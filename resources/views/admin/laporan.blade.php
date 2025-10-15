@@ -13,7 +13,7 @@
 
     <!-- Filter Form -->
     <div class="card shadow-sm p-4 mb-4">
-        <form method="GET" action="{{ route('admin.laporan') }}" class="row g-3">
+        <form id="filterForm" class="row g-3">
             <div class="col-md-4">
                 <label for="filter_type" class="form-label">Filter Waktu</label>
                 <select name="filter_type" id="filter_type" class="form-select">
@@ -38,8 +38,9 @@
             </div>
 
             <div class="col-12 d-flex justify-content-end">
-                <button type="submit" class="btn btn-primary">Tampilkan</button>
-                <a href="{{ route('admin.laporan.cetak') }}" class="btn btn-success ms-2" target="_blank">Cetak PDF</a>
+                <button type="button" id="btnTampilkan" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#laporanModal">
+                    Tampilkan
+                </button>
             </div>
         </form>
     </div>
@@ -64,6 +65,38 @@
         </div>
     </div>
 
+    <!-- Modal Laporan -->
+    <div class="modal fade" id="laporanModal" tabindex="-1" aria-labelledby="laporanModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-xl modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Hasil Laporan Kunjungan</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tutup"></button>
+                </div>
+                <div class="modal-body">
+                    <!-- Loader -->
+                    <div id="loading" class="text-center d-none">
+                        <div class="spinner-border text-primary" role="status"></div>
+                        <p class="mt-2">Memuat data...</p>
+                    </div>
+
+                    <!-- Hasil Data -->
+                    <div class="table-responsive" id="laporanTable">
+                        <!-- hasil AJAX dimasukkan di sini -->
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <a href="{{ route('admin.laporan.pdf', request()->only('tanggal','layanan')) }}" target="_blank" class="btn btn-success">
+                        Download PDF
+                    </a>
+
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
     <!-- Data Table -->
     <div class="card shadow-sm p-4">
         <h5 class="font-semibold mb-2">Data Kunjungan</h5>
@@ -85,7 +118,11 @@
                             <td>{{ $loop->iteration }}</td>
                             <td>{{ \Carbon\Carbon::parse($item->tgl_rm)->format('d-m-Y') }}</td>
                             <td>{{ $item->pasien->nama }}</td>
-                            <td>{{ $item->jenis_layanan->nama }}</td>
+                            @if ($item->pendaftaran && $item->pendaftaran->jenisLayanan)
+                                {{ $item->pendaftaran->jenisLayanan->nama_layanan }}
+                            @else
+                                <span class="text-danger">-- Data Tidak Lengkap --</span>
+                            @endif
                             <td>{{ $item->diagnosa }}</td>
                             <td>{{ $item->keterangan }}</td>
                         </tr>
@@ -100,3 +137,36 @@
     </div>
 </div>
 @endsection
+
+@push('scripts')
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $('#btnTampilkan').on('click', function() {
+        let filter = $('#filter_type').val();
+        let tanggal = $('#tanggal').val();
+        let layanan = $('#layanan').val();
+
+        // tampilkan loader
+        $('#loading').removeClass('d-none');
+        $('#laporanTable').html('');
+
+        $.ajax({
+            url: "{{ route('admin.laporan.ajax') }}",
+            type: "GET",
+            data: {
+                filter_type: filter,
+                tanggal: tanggal,
+                layanan: layanan
+            },
+            success: function(res) {
+                $('#loading').addClass('d-none');
+                $('#laporanTable').html(res);
+            },
+            error: function() {
+                $('#loading').addClass('d-none');
+                $('#laporanTable').html('<p class="text-danger text-center">Gagal memuat data.</p>');
+            }
+        });
+    });
+</script>
+@endpush
