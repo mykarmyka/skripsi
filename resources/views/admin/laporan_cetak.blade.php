@@ -49,7 +49,6 @@
                 <th>Nama Pasien</th>
                 <th>Layanan</th>
                 <th>Diagnosa</th>
-                <th>Keterangan</th>
             </tr>
         </thead>
         <tbody>
@@ -60,7 +59,6 @@
                     <td>{{ $item->pasien->nama }}</td>
                     <td>{{ $item->jenis_layanan->nama }}</td>
                     <td>{{ $item->diagnosa }}</td>
-                    <td>{{ $item->keterangan }}</td>
                 </tr>
             @empty
                 <tr>

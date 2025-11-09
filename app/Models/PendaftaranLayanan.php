@@ -27,7 +27,7 @@ class PendaftaranLayanan extends Model
 
     public function pasien()
     {
-        return $this->belongsTo(Pasien::class, 'id_pasien');
+        return $this->belongsTo(Pasien::class, 'id_pasien', 'id_pasien');
     }
 
     public function jenisLayanan()

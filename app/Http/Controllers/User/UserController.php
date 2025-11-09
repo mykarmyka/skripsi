@@ -6,22 +6,54 @@ use App\Http\Controllers\Controller;
 use App\Models\Pasien;
 use App\Models\PendaftaranLayanan;
 use App\Models\JenisLayanan;
+use App\Models\RekamMedis;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
+use Carbon\Carbon;
 
 
 class UserController extends Controller
 {
     public function home()
     {
-        $idPasien = Auth::guard('pasien')->id();
-        $riwayat = PendaftaranLayanan::where('id_pasien', $idPasien)
-                    ->orderBy('created_at', 'desc')
-                    ->get();
+        $pasien = Auth::guard('pasien')->user();
 
-        return view('user.home', compact('riwayat'));
+        if (!$pasien) {
+            return redirect()->route('user.login');
+        }
+
+        $idPasien = $pasien->id_pasien;
+
+        // 🧾 Statistik pribadi
+        $totalKunjungan = RekamMedis::where('id_pasien', $idPasien)->count();
+        $kunjunganBulanIni = RekamMedis::where('id_pasien', $idPasien)
+            ->whereMonth('tgl_rm', Carbon::now()->month)
+            ->whereYear('tgl_rm', Carbon::now()->year)
+            ->count();
+
+        // 🩺 Status pendaftaran hari ini
+        $pendaftaranHariIni = PendaftaranLayanan::with('jenisLayanan')
+            ->where('id_pasien', $idPasien)
+            ->whereDate('tgl_pendaftaran', now()->toDateString())
+            ->latest('created_at')
+            ->first();
+
+        // 🧠 Rekam medis terakhir
+        $rekamMedisTerakhir = RekamMedis::where('id_pasien', $idPasien)
+            ->latest('tgl_rm')
+            ->first();
+
+        // kirim semua variabel ke view
+        return view('user.home', compact(
+            'pasien',
+            'totalKunjungan',
+            'kunjunganBulanIni',
+            'pendaftaranHariIni',
+            'rekamMedisTerakhir'
+        ));
+        
     }
 
     public function formPendaftaran() 
@@ -32,7 +64,7 @@ class UserController extends Controller
 
     public function formPendaftaranPersalinan() 
     {
-        $jenis = JenisLayanan::all();
+        $jenis = JenisLayanan::where('nama_layanan', 'Persalinan')->get();
         return view('user.pendaftaran-persalinan', compact('jenis'));
     }
 
@@ -60,6 +92,16 @@ class UserController extends Controller
         $pasien->update($request->all());
 
         return redirect()->route('user.profil')->with('success', 'Profil berhasil diperbarui.');
+    }
+
+    public function riwayat(){
+        $idPasien = Auth::guard('pasien')->id();
+        $riwayat = PendaftaranLayanan::with('jenisLayanan')
+                    ->where('id_pasien', $idPasien)
+                    ->orderBy('created_at', 'desc')
+                    ->paginate(10);
+
+        return view('user.riwayat', compact('riwayat'));
     }
 
     

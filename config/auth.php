@@ -50,7 +50,7 @@ return [
 
         'admin' => [
             'driver' => 'session',
-            'provider' => 'admin', 
+            'provider' => 'admins', 
         ],
     ],
 
@@ -82,10 +82,10 @@ return [
             'model' => App\Models\Pasien::class,
         ],
 
-        'admin' => [
+        'admins' => [
             'driver' => 'eloquent',
             'model' => App\Models\Admin::class,
-            'table' => 'admin'
+            
         ],
 
         // 'users' => [

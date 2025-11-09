@@ -84,7 +84,7 @@ class AuthController extends Controller
     public function login(Request $request)
     {
         $request->validate([
-        'nik' => 'required|digits:16|exists:pasien,nik',
+            'nik' => 'required|digits:16|exists:pasien,nik',
         ]);
 
         // Tambahan: logout guard dulu biar session bersih
@@ -98,6 +98,7 @@ class AuthController extends Controller
         if ($pasien) {
             Auth::guard('pasien')->login($pasien); // ← LOGIN DENGAN GUARD 'pasien'
             $request->session()->regenerate();     // ← regenerasi session (wajib)
+            
             return redirect()->route('user.home');
         }
 

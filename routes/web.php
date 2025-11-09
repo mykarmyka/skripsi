@@ -4,17 +4,23 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\TestEmail;
+use App\Mail\PendaftaranBerhasilMail;
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\RekamMedisController;
 use App\Http\Controllers\Admin\PasienController;
 use App\Http\Controllers\Admin\ObatController;
-use App\Http\Controllers\Admin\PendaftaranController;
+use App\Http\Controllers\Admin\JenisLayananController;
+use App\Http\Controllers\Admin\PendaftaranController as AdminPendaftaranController;
+use App\Http\Controllers\User\PendaftaranController as UserPendaftaranController;
 use App\Http\Controllers\User\ProfilController;
 use App\Http\Controllers\User\AuthController;
 use App\Http\Controllers\User\UserController;
 
+
+
 // ROUTE HALAMAN UTAMA
 Route::get('/', function () {
+    
     if (Auth::guard('admin')->check()) {
         return redirect()->route('admin.dashboard');
     }
@@ -26,6 +32,8 @@ Route::get('/', function () {
     // Default: Admin login dulu
     return redirect()->route('admin.login');
 });
+
+
 
 // ================= ADMIN =================
 Route::prefix('admin')->name('admin.')->group(function () {
@@ -49,13 +57,20 @@ Route::prefix('admin')->name('admin.')->group(function () {
         // Layanan
         Route::get('/layanan', [AdminController::class, 'lihatPendaftaran'])->name('layanan');
         Route::get('/pendaftaran/{id}/update-status', [AdminController::class, 'updateStatus'])->name('updateStatus'); 
-        Route::post('pendaftaran/simpan', [PendaftaranController::class, 'simpanPendaftaran'])->name('pendaftaran.simpan');
-        Route::post('pendaftaran/persalinan', [PendaftaranController::class, 'simpanPersalinan'])->name('pendaftaran.persalinan');
+        Route::post('/pendaftaran/simpan', [AdminController::class, 'simpanPendaftaran'])->name('pendaftaran.simpan');
+        Route::post('/pendaftaran/persalinan', [AdminPendaftaranController::class, 'simpanPersalinan'])->name('pendaftaran.persalinan');
+        Route::post('/pendaftaran/{id}/rekam-medis', [AdminController::class, 'simpanRekamMedis'])->name('pendaftaran.simpanRekamMedis');
+
+        //Jenis Layanan
+        Route::get('/jenis-layanan', [JenisLayananController::class, 'index'])->name('jenis-layanan');
+        Route::post('/jenis-layanan/store', [JenisLayananController::class, 'storeLayanan'])->name('jenis-layanan.store');
+        Route::delete('/jenis-layanan/{id}', [JenisLayananController::class, 'destroyLayanan'])->name('jenis-layanan.destroy');
 
         // Rekam Medis
         Route::get('/rekam-medis', [RekamMedisController::class, 'index'])->name('rekam-medis');
         Route::post('/rekam-medis', [RekamMedisController::class, 'store'])->name('rekam.store');
-        Route::get('/rekam-medis', [RekamMedisController::class, 'createRekamMedis'])->name('rekammedis');
+        
+        
 
         // Laporan
         Route::get('/laporan', [AdminController::class, 'laporan'])->name('laporan');
@@ -85,20 +100,20 @@ Route::prefix('user')->name('user.')->group(function () {
         Route::get('/profil', [UserController::class, 'profil'])->name('profil');
         Route::post('/profil/update', [ProfilController::class, 'update'])->name('profilUpdate');
         Route::put('/profil', [UserController::class, 'updateProfil'])->name('updateProfil');
+        Route::get('/riwayat', [UserController::class, 'riwayat'])->name('riwayat');
+
 
         // Pendaftaran Layanan
         Route::get('/pendaftaran', [UserController::class, 'formPendaftaran'])->name('pendaftaran');
-        Route::post('/pendaftaran/simpan', [PendaftaranController::class, 'simpanPendaftaran'])
-            ->name('pendaftaran.simpan');
+        Route::post('/pendaftaran/simpan', [UserPendaftaranController::class, 'simpanPendaftaran'])->name('pendaftaran.simpan');
         Route::get('/pendaftaran-persalinan', [UserController::class, 'formPendaftaranPersalinan'])->name('pendaftaran-persalinan');
+        Route::post('/pendaftaran-persalinan/simpan', [UserPendaftaranController::class, 'simpanPersalinan'])->name('pendaftaran-persalinan.simpan');
+        Route::post('/pendaftaran/store', [UserPendaftaranController::class, 'store'])->name('pendaftaran.store');
         
     });
 });
 
-Route::get('/test-email', function () {
-    Mail::raw('Email ini berhasil dikirim dari Laravel 🎉', function ($message) {
-        $message->to('madonnahr20@gmail.com')
-                ->subject('Tes Email Laravel');
-    });
-    return 'Email percobaan sudah dikirim!';
-});
+
+
+
+

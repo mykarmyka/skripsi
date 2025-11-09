@@ -93,11 +93,11 @@ input[readonly] {
                             <input type="text" name="no_telp" class="form-control" pattern="08[0-9]{8,11}" value="{{ $profil->telp }}" required>
                         </div>
                         <div class="col-md-6">
-                            <label class="form-label">Nama Pasangan</label>
+                            <label class="form-label">Nama Suami/Istri</label>
                             <input type="text" name="nama_pasangan" class="form-control" value="{{ $profil->nama_pasangan }}">
                         </div>
                         <div class="col-md-6">
-                            <label class="form-label">nik</label>
+                            <label class="form-label">NIK</label>
                             <input type="text" name="nik" class="form-control" pattern="[0-9]{16}" value="{{ $profil->nik }}" required>
                         </div>
                         <div class="col-md-6">

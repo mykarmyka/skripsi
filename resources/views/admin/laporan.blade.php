@@ -29,11 +29,13 @@
 
             <div class="col-md-4">
                 <label for="layanan" class="form-label">Jenis Layanan</label>
-                <select name="layanan" id="layanan" class="form-select">
+                <select name="jenis_layanan" id="layanan" class="form-select">
                     <option value="">Semua Layanan</option>
-                    <option value="KB">KB</option>
-                    <option value="Imunisasi">Imunisasi</option>
-                    <option value="Persalinan">Persalinan</option>
+                    @foreach($layanan as $item)
+                        <option value="{{ $item->id }}" {{ request('jenis_layanan') == $item->id ? 'selected' : '' }}>
+                            {{ $item->nama_layanan }}
+                        </option>
+                    @endforeach
                 </select>
             </div>
 
@@ -47,61 +49,36 @@
 
     <!-- Grafik -->
 
-    <div class="container">
-        <h4 class="font-semibold mb-4"><i class="bi bi-bar-chart me-2"></i>Grafik Laporan Kunjungan</h4>
+    <div class="container mb-4">
+        <h4 class="font-semibold mb-3">
+            Grafik Laporan Kunjungan
+        </h4>
 
-        <div class="card mb-4">
-            <div class="card-header">Kunjungan Per Bulan</div>
-            <div class="card-body">
-                <canvas id="chartBulan" height="100"></canvas>
-            </div>
-        </div>
-
-        <div class="card">
-            <div class="card-header">Kunjungan Per Minggu</div>
-            <div class="card-body">
-                <canvas id="chartMinggu" height="100"></canvas>
-            </div>
-        </div>
-    </div>
-
-    <!-- Modal Laporan -->
-    <div class="modal fade" id="laporanModal" tabindex="-1" aria-labelledby="laporanModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-xl modal-dialog-scrollable">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Hasil Laporan Kunjungan</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tutup"></button>
-                </div>
-                <div class="modal-body">
-                    <!-- Loader -->
-                    <div id="loading" class="text-center d-none">
-                        <div class="spinner-border text-primary" role="status"></div>
-                        <p class="mt-2">Memuat data...</p>
-                    </div>
-
-                    <!-- Hasil Data -->
-                    <div class="table-responsive" id="laporanTable">
-                        <!-- hasil AJAX dimasukkan di sini -->
+        <div class="row">
+            <div class="col-lg-6 mb-3">
+                <div class="card shadow-sm">
+                    <div class="card-header">Kunjungan Per Bulan</div>
+                    <div class="card-body">
+                        <canvas id="chartBulan" height="120"></canvas>
                     </div>
                 </div>
-                <div class="modal-footer">
-                    <a href="{{ route('admin.laporan.pdf', request()->only('tanggal','layanan')) }}" target="_blank" class="btn btn-success">
-                        Download PDF
-                    </a>
-
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+            </div>
+            <div class="col-lg-6 mb-3">
+                <div class="card shadow-sm">
+                    <div class="card-header">Kunjungan Per Minggu</div>
+                    <div class="card-body">
+                        <canvas id="chartMinggu" height="120"></canvas>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-</div>
+    </div>    
 
     <!-- Data Table -->
-    <div class="card shadow-sm p-4">
-        <h5 class="font-semibold mb-2">Data Kunjungan</h5>
+    <div class="card shadow-sm p-4 mb-4">
+        <h5 class="font-semibold mb-3">Data Kunjungan Pasien</h5>
         <div class="table-responsive">
-            <table class="table table-bordered table-hover">
+            <table class="table table-bordered table-hover align-middle">
                 <thead class="table-light">
                     <tr>
                         <th>No</th>
@@ -109,30 +86,52 @@
                         <th>Nama Pasien</th>
                         <th>Layanan</th>
                         <th>Diagnosa</th>
-                        <th>Keterangan</th>
                     </tr>
                 </thead>
                 <tbody>
                     @forelse ($dataKunjungan as $item)
                         <tr>
                             <td>{{ $loop->iteration }}</td>
-                            <td>{{ \Carbon\Carbon::parse($item->tgl_rm)->format('d-m-Y') }}</td>
+                            <td>{{ \Carbon\Carbon::parse($item->tgl_rm)->format('d/m/Y') }}</td>
                             <td>{{ $item->pasien->nama }}</td>
-                            @if ($item->pendaftaran && $item->pendaftaran->jenisLayanan)
-                                {{ $item->pendaftaran->jenisLayanan->nama_layanan }}
-                            @else
-                                <span class="text-danger">-- Data Tidak Lengkap --</span>
-                            @endif
-                            <td>{{ $item->diagnosa }}</td>
-                            <td>{{ $item->keterangan }}</td>
+                            <td>{{ $item->pendaftaran->jenisLayanan->nama_layanan ?? '-' }}</td>
+                            <td>{{ $item->diagnosa ?? '-' }}</td>
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="7" class="text-center">Tidak ada data kunjungan ditemukan.</td>
+                            <td colspan="6" class="text-center text-muted">Tidak ada data kunjungan ditemukan.</td>
                         </tr>
                     @endforelse
                 </tbody>
             </table>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Laporan -->
+<div class="modal fade" id="laporanModal" tabindex="-1" aria-labelledby="laporanModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl modal-dialog-scrollable">
+        <div class="modal-content shadow-lg">
+            <div class="modal-header">
+                <h5 class="modal-title">Hasil Laporan Kunjungan</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div id="loading" class="text-center d-none py-5">
+                    <div class="spinner-border text-primary" role="status"></div>
+                    <p class="mt-3 text-muted">Memuat data laporan...</p>
+                </div>
+
+                <div class="table-responsive" id="laporanTable"></div>
+            </div>
+            <div class="modal-footer">
+                <a href="{{ route('admin.laporan.pdf', request()->only('tanggal','layanan')) }}" target="_blank" class="btn btn-success">
+                    Download PDF
+                </a>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                    <i class="bi bi-x-circle me-1"></i> Tutup
+                </button>
+            </div>
         </div>
     </div>
 </div>

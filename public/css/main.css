@@ -95,7 +95,7 @@ h4, h5 {
 }
 
 .btn {
-    min-width: 100px;
+    min-width: 0px;
 }
 
 /* --- Login Page Specific Styles --- */

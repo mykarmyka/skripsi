@@ -56,7 +56,7 @@
                 </div>
 
                 <div class="register-form-group">
-                    <label for="nama_pasangan">Nama Pasangan (opsional):</label>
+                    <label for="nama_pasangan">Nama Suami/Istri (opsional):</label>
                     <input type="text" id="nama_pasangan" name="nama_pasangan" placeholder="Masukkan nama pasangan Anda (jika ada)">
                 </div>
 
@@ -90,7 +90,7 @@
                 <div class="register-footer">
                     <p class="register-login-link-footer">Sudah punya akun? <a href="{{ route('user.login') }}">Login di sini</a></p>
                     <div class="register-button-group">
-                        {{-- Anda bisa menambahkan tombol batal jika diperlukan --}}
+                        
                         {{-- <button type="button" class="register-cancel-button" onclick="history.back()">Batal</button> --}}
                         <button type="submit" class="register-submit-button">Daftar Akun</button>
                     </div>

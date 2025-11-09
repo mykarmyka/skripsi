@@ -2,7 +2,7 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <title>Klinik - User</title>
+    <title>Pasien</title>
     <link rel="stylesheet" href="{{ asset('css/main.css') }}">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -32,6 +32,11 @@
             <a href="{{ route('user.pendaftaran-persalinan') }}"
                 class="block px-3 py-2 rounded hover:bg-blue-200 {{ request()->routeIs('user.pendaftaran-persalinan') ? 'bg-blue-200 font-semibold text-blue-800' : '' }}">
                 <i class="bi bi-clipboard-check"></i> Persalinan
+            </a>
+
+            <a href="{{ route('user.riwayat') }}"
+                class="block px-3 py-2 rounded hover:bg-blue-200 {{ request()->routeIs('user.riwayat') ? 'bg-blue-200 font-semibold text-blue-800' : '' }}">
+                <i class="bi bi-folder2-open"></i> Riwayat Pasien
             </a>
 
             <a href="{{ route('user.profil') }}"

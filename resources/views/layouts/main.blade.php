@@ -24,17 +24,6 @@
                 class="block px-3 py-2 rounded hover:bg-blue-200 {{ request()->routeIs('admin.dashboard') ? 'bg-blue-200 font-semibold text-blue-800' : '' }}">
                 <i class="bi bi-house-door me-2"></i>Dashboard
             </a>
-            <p class="text-gray-500 text-sm mt-4">DATA MASTER</p>
-
-            <a href="{{ route('admin.pasien') }}"
-                class="block px-3 py-2 rounded hover:bg-blue-200 {{ request()->routeIs('admin.pasien') ? 'bg-blue-200 font-semibold text-blue-800' : '' }}">
-                <i class="bi bi-person-lines-fill me-2"></i> Pasien
-            </a>
-
-            <a href="{{ route('admin.obat') }}"
-                class="block px-3 py-2 rounded hover:bg-blue-200 {{ request()->routeIs('admin.obat') ? 'bg-blue-200 font-semibold text-blue-800' : '' }}">
-                <i class="bi bi-grid me-2"></i> Obat
-            </a>
 
             <p class="text-gray-500 text-sm mt-4">MANAJEMEN</p>
 
@@ -52,10 +41,28 @@
                 <i class="bi bi-file-earmark-text me-2"></i></i>Laporan
             </a>
 
+            <p class="text-gray-500 text-sm mt-4">DATA MASTER</p>
+
+            <a href="{{ route('admin.pasien') }}"
+                class="block px-3 py-2 rounded hover:bg-blue-200 {{ request()->routeIs('admin.pasien') ? 'bg-blue-200 font-semibold text-blue-800' : '' }}">
+                <i class="bi bi-person-lines-fill me-2"></i> Pasien
+            </a>
+
+            <a href="{{ route('admin.obat') }}"
+                class="block px-3 py-2 rounded hover:bg-blue-200 {{ request()->routeIs('admin.obat') ? 'bg-blue-200 font-semibold text-blue-800' : '' }}">
+                <i class="bi bi-grid me-2"></i> Obat
+            </a>
+
+            <a href="{{ route('admin.jenis-layanan') }}"
+                class="block px-3 py-2 rounded hover:bg-blue-200 {{ request()->routeIs('admin.jenis-layanan') ? 'bg-blue-200 font-semibold text-blue-800' : '' }}">
+                <i class="bi bi-heart-pulse me-2"></i> Jenis Layanan
+            </a>
+
             <a href="#" 
                 class="block px-3 py-2 rounded hover:bg-blue-200" data-bs-toggle="modal" data-bs-target="#logoutModal">
-                <i class="bi bi-box-arrow-right"></i>Logout
+                <i class="bi bi-box-arrow-right"></i> Logout
             </a>
+
         </nav>
     </aside>
 

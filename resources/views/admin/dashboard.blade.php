@@ -6,28 +6,29 @@
             <div class="d-flex justify-content-between align-items-center mb-4">
                 <div>
                     <h2 class="text-xl font-semibold mb-2">Dashboard</h2>
-    <p class="mb-6 text-gray-700">Selamat Datang di Website Klinik</p>
+                    <p class="mb-6 text-gray-700">Selamat Datang di Website Klinik</p>
                 </div>
                 <div class="d-flex align-items-center">
                     <input type="text" class="form-control me-2" placeholder="Search" style="width: 200px;">
-                    <span class="me-2">Hello, Admin</span>
+                    <span class="me-2">Hello, Bidan</span>
                     <i class="bi bi-person-circle" style="font-size: 1.5rem;"></i>
                 </div>
             </div>
 
-    <div class="grid grid-cols-3 gap-6 mb-10">
-        <div class="bg-white p-5 rounded shadow">
-            <div class="text-2xl font-bold">{{ $jumlahPasien }}</div>
-            <p class="text-gray-600">Jumlah Pasien</p>
-        </div>
-        <div class="bg-white p-5 rounded shadow">
-            <div class="text-2xl font-bold">{{ $jumlahLayanan }}</div>
-            <p class="text-gray-600">Jumlah Layanan</p>
-        </div>
-        <div class="bg-white p-5 rounded shadow">
-            <div class="text-2xl font-bold">{{ $jumlahAntrian }}</div>
-            <p class="text-gray-600">Antrian Pasien</p>
-        </div>
+    <div class="grid grid-cols-2 gap-10 mb-10">
+        <a href="{{ route('admin.pasien') }}" class="block hover:scale-105 transition-transform">
+            <div class="bg-white p-5 rounded shadow">
+                <div class="text-2xl font-bold">{{ $jumlahPasien }}</div>
+                <p class="text-gray-600">Jumlah Pasien</p>
+            </div>
+        </a>    
+        
+        <a href="{{ route('admin.layanan') }}" class="block hover:scale-105 transition-transform">
+            <div class="bg-white p-5 rounded shadow">
+                <div class="text-2xl font-bold">{{ $jumlahAntrian }}</div>
+                <p class="text-gray-600">Antrian Pasien</p>
+            </div>
+        </a>
     </div>
 
     <div class="bg-white p-6 rounded shadow">

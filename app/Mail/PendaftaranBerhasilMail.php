@@ -19,7 +19,7 @@ class PendaftaranBerhasilMail extends Mailable
     public $estimasiDatang;
     public $tglPendaftaran;
 
-    public function __construct()
+    public function __construct($pasien, $noAntrian, $namaLayanan, $estimasiDatang, $tglPendaftaran)
     {
         $this->pasien = $pasien;
         $this->noAntrian = $noAntrian;
@@ -31,7 +31,14 @@ class PendaftaranBerhasilMail extends Mailable
     public function build()
     {
         return $this->subject('Pendaftaran Layanan Klinik Anda Berhasil')
-                    ->markdown('emails.pendaftaran');
+                    ->markdown('emails.pendaftaran')
+                    ->with([
+                        'pasien' => $this->pasien,
+                        'noAntrian' => $this->noAntrian,
+                        'namaLayanan' => $this->namaLayanan,
+                        'estimasiDatang' => $this->estimasiDatang,
+                        'tglPendaftaran' => $this->tglPendaftaran
+                    ]);
     }
 
     /**

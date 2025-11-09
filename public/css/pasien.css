@@ -40,6 +40,7 @@ p {
     font-size: 14px;
     text-align: center;
     padding: 3px 7px;
+    text-align: left;
 }
 
 .table thead {
@@ -53,10 +54,12 @@ p {
 
 .table-responsive {
     background-color: white;
-    border-radius: 12px;
-    padding: 20px;
+    border-radius: 3px;
+    padding: 0px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
 }
+
+
 
 /* Atur kolom Tgl Lahir dan Usia */
 .table td:nth-child(5),  /* Tgl Lahir */

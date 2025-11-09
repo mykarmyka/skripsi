@@ -2,6 +2,22 @@
 
 return [
 
+    /*
+    |--------------------------------------------------------------------------
+    | Default Guard Name
+    |--------------------------------------------------------------------------
+    |
+    | This tells Spatie Permission which guard to use by default when no
+    | guard_name is specified explicitly. In your case, since admin login
+    | uses guard 'admin', we set it here.
+    |
+    */
+
+    'defaults' => [
+        'guard' => 'admin',
+    ],
+
+
     'models' => [
 
         /*

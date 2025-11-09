@@ -10,29 +10,6 @@ use Illuminate\Http\Request;
 class PendaftaranController extends Controller
 {
 
-    public function simpanPendaftaran(Request $request)
-    {
-        $request->validate([
-            'id_pasien' => 'required|exists:pasien,id_pasien',
-            'id_jenis_layanan' => 'required|exists:jenis_layanan,id',
-            'tgl_pendaftaran' => 'required|date',
-        ]);
-
-        // Nomor antrian otomatis per hari
-        $jumlahAntrianHariIni = PendaftaranLayanan::whereDate('tgl_pendaftaran', $request->tgl_pendaftaran)->count();
-        $no_antrian_baru = $jumlahAntrianHariIni + 1;
-
-        PendaftaranLayanan::create([
-            'id_pasien' => $request->id_pasien,
-            'tgl_pendaftaran' => $request->tgl_pendaftaran,
-            'id_jenis_layanan' => $request->id_jenis_layanan,
-            'no_antrian' => str_pad($no_antrian_baru, 4, '0', STR_PAD_LEFT),
-            'status' => 'waiting',
-        ]);
-
-        return redirect()->back()->with('success', 'Pendaftaran berhasil!');
-    }
-
     public function simpanPersalinan(Request $request)
     {
         $request->validate([

@@ -23,6 +23,7 @@
         </div>
     </div>
 
+
     <div class="bg-white p-6 rounded shadow" class="table-putih">
         <div class="d-flex justify-content-between align-items-center mb-3">
             <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalTambahPasien">
@@ -101,61 +102,63 @@
         </div>
         </div>
 
-        <div class="table-responsive">
-            <table class="table table-bordered table-striped text-center">
-                <thead class="table-light">
-                    <tr>
-                        <th>No</th>
-                        <th>No. RM</th>
-                        <th>Nama Lengkap</th>
-                        <th>nik</th>
-                        <th>Tempat Lahir</th>
-                        <th>Tgl Lahir</th>
-                        <th>Usia</th>
-                        <th>Jenis Kelamin</th>
-                        <th>No. Telepon</th>
-                        <th>Alamat</th>
-                        <th>Nama Suami/Istri</th>
-                        <th>Aksi</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @forelse ($dataPasien as $index => $pasien)
-                    <tr>
-                        <td>{{ $index + 1 }}</td>
-                        <td>{{ $pasien->id_rm }}</td>
-                        <td>{{ $pasien->nama }}</td>
-                        <td>{{ $pasien->nik }}</td>
-                        <td>{{ $pasien->tempat_lahir }}</td>
-                        <td>{{ \Carbon\Carbon::parse($pasien->tgl_lahir)->format('d-m-Y') }}</td>
-                        <td>{{ \Carbon\Carbon::parse($pasien->tgl_lahir)->age }} th</td>
-                        <td>{{ $pasien->jenis_kelamin }}</td>
-                        <td>{{ $pasien->no_telp }}</td>
-                        <td>{{ $pasien->alamat }}</td>
-                        <td>{{ $pasien->nama_pasangan }}</td>
-                        <td>
-                            <button type="button" class="btn btn-info btn-sm" data-bs-toggle="modal" data-bs-target="#lihatPasien{{ $pasien->id }}">
-                                <i class="bi bi-eye"></i>
-                            </button>
-                            <a href="#" class="btn btn-sm btn-warning" tittle="Edit">
-                                <i class="bi bi-pencil"></i>
-                            </a>
-                            <form action="#" method="POST" class="d-inline" onsubmit="return confirm('Yakin ingin menghapus pasien ini?')">
-                                @csrf
-                                @method('DELETE')
-                                <button class="btn btn-sm btn-danger" tittle="Hapus">
-                                    <i class="bi bi-trash"></i>
+        <div class="table-responsive" style="overflow-x: auto;">
+            <div class="table-scroll">
+                <table class="table table-bordered table-striped text-center">
+                    <thead class="table-light">
+                        <tr>
+                            <th>No</th>
+                            <th>No. RM</th>
+                            <th>Nama Lengkap</th>
+                            <th>NIK</th>
+                            <th>Tempat Lahir</th>
+                            <th>Tgl Lahir</th>
+                            <th>Usia</th>
+                            <th>Jenis Kelamin</th>
+                            <th>No. Telepon</th>
+                            <th>Alamat</th>
+                            <th>Nama Suami/Istri</th>
+                            <th>Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @forelse ($dataPasien as $index => $pasien)
+                        <tr>
+                            <td>{{ $index + 1 }}</td>
+                            <td>{{ $pasien->id_rm }}</td>
+                            <td>{{ $pasien->nama }}</td>
+                            <td>{{ $pasien->nik }}</td>
+                            <td>{{ $pasien->tempat_lahir }}</td>
+                            <td>{{ \Carbon\Carbon::parse($pasien->tgl_lahir)->format('d-m-Y') }}</td>
+                            <td>{{ \Carbon\Carbon::parse($pasien->tgl_lahir)->age }} th</td>
+                            <td>{{ $pasien->jenis_kelamin }}</td>
+                            <td>{{ $pasien->no_telp }}</td>
+                            <td>{{ $pasien->alamat }}</td>
+                            <td>{{ $pasien->nama_pasangan }}</td>
+                            <td>
+                                <button type="button" class="btn btn-info btn-sm" data-bs-toggle="modal" data-bs-target="#lihatPasien{{ $pasien->id }}">
+                                    <i class="bi bi-eye"></i>
                                 </button>
-                            </form>
-                        </td>
-                    </tr>
-                    @empty
-                    <tr>
-                        <td colspan="10">Belum ada data pasien.</td>
-                    </tr>
-                    @endforelse
-                </tbody>
-            </table>
+                                <a href="#" class="btn btn-sm btn-warning" tittle="Edit">
+                                    <i class="bi bi-pencil"></i>
+                                </a>
+                                <form action="#" method="POST" class="d-inline" onsubmit="return confirm('Yakin ingin menghapus pasien ini?')">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button class="btn btn-sm btn-danger" tittle="Hapus">
+                                        <i class="bi bi-trash"></i>
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                        @empty
+                        <tr>
+                            <td colspan="10">Belum ada data pasien.</td>
+                        </tr>
+                        @endforelse
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 </div>

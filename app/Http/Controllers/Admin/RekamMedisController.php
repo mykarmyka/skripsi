@@ -7,6 +7,8 @@ use App\Http\Controllers\Controller;
 use App\Models\RekamMedis;
 use App\Models\Pasien;
 use App\Models\PendaftaranLayanan;
+use App\Models\Admin;
+use App\Models\JenisLayanan;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 
@@ -15,16 +17,18 @@ class RekamMedisController extends Controller
 {
     public function index(Request $request)
     {
+        $jenisLayanan = JenisLayanan::all();
+        
         $keyword = $request->input('keyword');
 
-        $rekamMedis = RekamMedis::with(['pasien', 'pendaftaran'])
+        $rekamMedis = RekamMedis::with(['pasien', 'pendaftaran', 'jenisLayanan'])
             ->when($keyword, function ($query) use ($keyword) {
                 $query->whereHas('pasien', function ($q) use ($keyword) {
                     $q->where('nama', 'like', "%{$keyword}%");
                 })->orWhere('tgl_rm', 'like', "%{$keyword}%");
             })
             ->orderByDesc('tgl_rm')
-            ->get();
+            ->paginate(10);
 
         $pasien = Pasien::orderBy('nama')->get();
 
@@ -33,7 +37,11 @@ class RekamMedisController extends Controller
             ->orderBy('tgl_pendaftaran', 'desc')
             ->get();
 
-        return view('admin.rekam-medis', compact('rekamMedis', 'pasien', 'pendaftaran'));
+
+        $admin = Admin::orderBy('username')->get();
+        
+        
+        return view('admin.rekam-medis', compact('rekamMedis', 'pasien', 'pendaftaran', 'admin', 'jenisLayanan'));
     }
 
     public function destroy($id)
@@ -47,7 +55,7 @@ class RekamMedisController extends Controller
         $request->validate([
             
             'id_pendaftaran' => 'required|exists:pendaftaran_layanan,id_pendaftaran',
-
+            'id_admin' => 'required|exists:admin,id_admin',
             'tgl_rm' => 'required|date',
             'anamnesa' => 'required|string|',
             'diagnosa' => 'required|string|',
@@ -57,6 +65,23 @@ class RekamMedisController extends Controller
 
         $pendaftaran = \App\Models\PendaftaranLayanan::with(['pasien','jenisLayanan'])
             ->findOrFail($request->id_pendaftaran);
+
+        // Cek apakah pasien ini sudah punya rekam medis
+        $existingRM = RekamMedis::where('id_pasien', $pendaftaran->id_pasien)->first();
+
+        if ($existingRM) {
+            // kalau sudah ada → update data lama
+            $existingRM->update([
+                'id_pendaftaran' => $request->id_pendaftaran,
+                'id_admin' => $request->id_admin,
+                'id_jenis_layanan' => $pendaftaran->id_jenis_layanan,
+                'tgl_rm' => $request->tgl_rm,
+                'anamnesa' => $request->anamnesa,
+                'diagnosa' => $request->diagnosa,
+                'terapi' => $request->terapi,
+                'keterangan' => $request->keterangan,
+            ]);
+        } else {
 
         $last = RekamMedis::orderBy('id_rm', 'desc')->first();
         if ($last) {
@@ -70,7 +95,7 @@ class RekamMedisController extends Controller
             'id_rm' => $newId,
             'id_pasien' => $pendaftaran->id_pasien,
             'id_pendaftaran' => $request->id_pendaftaran,
-            'id_admin' => Auth::check() ? Auth::user()->id : null,
+            'id_admin' => $request->id_admin,
             'id_jenis_layanan' => $pendaftaran->id_jenis_layanan,
             'tgl_rm' => $request->tgl_rm,
             'anamnesa' => $request->anamnesa,
@@ -78,6 +103,7 @@ class RekamMedisController extends Controller
             'terapi' => $request->terapi,
             'keterangan' => $request->keterangan,
         ]);
+    }    
 
         return redirect()->route('admin.rekam-medis')->with('success', 'Rekam medis berhasil ditambahkan!');
     }
@@ -97,6 +123,7 @@ class RekamMedisController extends Controller
 
         $rekamMedis = $query->get();
         $pasien = Pasien::orderBy('nama')->get();
+        $admin = Admin::orderBy('username')->get();
 
         return view('admin.rekam-medis', compact('rekamMedis','pasien'));
     }
@@ -109,6 +136,8 @@ class RekamMedisController extends Controller
             ->whereDate('tgl_pendaftaran', $today)
             ->orderBy('no_antrian', 'asc')
             ->get();
+
+        $admin = Admin::orderBy('username')->get();    
 
         return view('admin.rekam-medis', compact('pendaftaran'));
     }
