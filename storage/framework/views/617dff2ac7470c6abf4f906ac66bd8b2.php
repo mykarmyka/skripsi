@@ -1,15 +1,15 @@
-@extends('layouts.main')
 
-@push('styles')
-<link rel="stylesheet" href="{{ asset('css/pasien.css') }}">
 
-@endpush
+<?php $__env->startPush('styles'); ?>
+<link rel="stylesheet" href="<?php echo e(asset('css/pasien.css')); ?>">
 
-@php use Carbon\Carbon; @endphp
+<?php $__env->stopPush(); ?>
 
-@section('title-pasien', 'Data Pasien')
+<?php use Carbon\Carbon; ?>
 
-@section('content')
+<?php $__env->startSection('title-pasien', 'Data Pasien'); ?>
+
+<?php $__env->startSection('content'); ?>
 <div class="container">
 
     <div class="d-flex justify-content-between align-items-center mb-4">
@@ -18,7 +18,7 @@
             <p class='mb-4'>Periksa dan perbarui data pasien secara menyeluruh</p>
         </div>
         <div class="d-flex align-items-center">
-            <span class="me-2">Hello, {{ Auth::user()->username }}</span>
+            <span class="me-2">Hello, Admin</span>
             <i class="bi bi-person-circle" style="font-size: 1.5rem;"></i>
         </div>
     </div>
@@ -31,8 +31,8 @@
             </button>
             <div>
                 <!-- <label for="search">Search</label> -->
-                 <form action="{{ route('admin.pasien') }}" method="get" class="d-flex align-items-center me-3">
-                    <input type="text" class="form-control me-2" name="search" value="{{ request('search') }}" placeholder="Search">
+                 <form action="<?php echo e(route('admin.pasien')); ?>" method="get" class="d-flex align-items-center me-3">
+                    <input type="text" class="form-control me-2" name="search" value="<?php echo e(request('search')); ?>" placeholder="Search">
                     <button type="submit"></button>
                 </form>
                 
@@ -43,8 +43,8 @@
         <div class="modal fade" id="modalTambahPasien" tabindex="-1" aria-labelledby="modalTambahPasienLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
-            <form action="{{ route('admin.pasien.store') }}" method="POST">
-                @csrf
+            <form action="<?php echo e(route('admin.pasien.store')); ?>" method="POST">
+                <?php echo csrf_field(); ?>
                 <div class="modal-header">
                 <h5 class="modal-title fw-bold" id="modalTambahPasienLabel">Tambah Data Pasien</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
@@ -122,40 +122,40 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @forelse ($dataPasien as $index => $pasien)
+                        <?php $__empty_1 = true; $__currentLoopData = $dataPasien; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $index => $pasien): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
                         <tr>
-                            <td>{{ $index + 1 }}</td>
-                            <td>{{ $pasien->id_rm }}</td>
-                            <td>{{ $pasien->nama }}</td>
-                            <td>{{ $pasien->nik }}</td>
-                            <td>{{ $pasien->tempat_lahir }}</td>
-                            <td>{{ \Carbon\Carbon::parse($pasien->tgl_lahir)->format('d-m-Y') }}</td>
-                            <td>{{ \Carbon\Carbon::parse($pasien->tgl_lahir)->age }} th</td>
-                            <td>{{ $pasien->jenis_kelamin }}</td>
-                            <td>{{ $pasien->no_telp }}</td>
-                            <td>{{ $pasien->alamat }}</td>
-                            <td>{{ $pasien->nama_pasangan }}</td>
+                            <td><?php echo e($index + 1); ?></td>
+                            <td><?php echo e($pasien->id_rm); ?></td>
+                            <td><?php echo e($pasien->nama); ?></td>
+                            <td><?php echo e($pasien->nik); ?></td>
+                            <td><?php echo e($pasien->tempat_lahir); ?></td>
+                            <td><?php echo e(\Carbon\Carbon::parse($pasien->tgl_lahir)->format('d-m-Y')); ?></td>
+                            <td><?php echo e(\Carbon\Carbon::parse($pasien->tgl_lahir)->age); ?> th</td>
+                            <td><?php echo e($pasien->jenis_kelamin); ?></td>
+                            <td><?php echo e($pasien->no_telp); ?></td>
+                            <td><?php echo e($pasien->alamat); ?></td>
+                            <td><?php echo e($pasien->nama_pasangan); ?></td>
                             <td>
-                                <button type="button" class="btn btn-info btn-sm" data-bs-toggle="modal" data-bs-target="#lihatPasien{{ $pasien->id }}">
+                                <button type="button" class="btn btn-info btn-sm" data-bs-toggle="modal" data-bs-target="#lihatPasien<?php echo e($pasien->id); ?>">
                                     <i class="bi bi-eye"></i>
                                 </button>
                                 <a href="#" class="btn btn-sm btn-warning" tittle="Edit">
                                     <i class="bi bi-pencil"></i>
                                 </a>
                                 <form action="#" method="POST" class="d-inline" onsubmit="return confirm('Yakin ingin menghapus pasien ini?')">
-                                    @csrf
-                                    @method('DELETE')
+                                    <?php echo csrf_field(); ?>
+                                    <?php echo method_field('DELETE'); ?>
                                     <button class="btn btn-sm btn-danger" tittle="Hapus">
                                         <i class="bi bi-trash"></i>
                                     </button>
                                 </form>
                             </td>
                         </tr>
-                        @empty
+                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>
                         <tr>
                             <td colspan="10">Belum ada data pasien.</td>
                         </tr>
-                        @endforelse
+                        <?php endif; ?>
                     </tbody>
                 </table>
             </div>
@@ -164,29 +164,31 @@
 </div>
 
 <!-- Modal Lihat Detail Pasien -->
-<div class="modal fade" id="lihatPasien{{ $pasien->id }}" tabindex="-1" aria-labelledby="modalLabel{{ $pasien->id }}" aria-hidden="true">
+<div class="modal fade" id="lihatPasien<?php echo e($pasien->id); ?>" tabindex="-1" aria-labelledby="modalLabel<?php echo e($pasien->id); ?>" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="modalLabel{{ $pasien->id }}">Detail Data Pasien</h5>
+                <h5 class="modal-title" id="modalLabel<?php echo e($pasien->id); ?>">Detail Data Pasien</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tutup"></button>
             </div>
             <div class="modal-body">
                 <table class="table table-bordered">
-                    <tr><th>Nama</th><td>{{ $pasien->nama }}</td></tr>
-                    <tr><th>nik</th><td>{{ $pasien->nik }}</td></tr>
-                    <tr><th>Usia</th><td>{{ Carbon::parse($pasien->tgl_lahir)->age }} tahun</td></tr>
-                    <tr><th>Jenis Kelamin</th><td>{{ $pasien->jenis_kelamin }}</td></tr>
-                    <tr><th>Tempat Lahir</th><td>{{ $pasien->tempat_lahir }}</td></tr>
-                    <tr><th>Tanggal Lahir</th><td>{{ $pasien->tgl_lahir }}</td></tr>
-                    <tr><th>No. Telepon</th><td>{{ $pasien->no_telp }}</td></tr>
-                    <tr><th>Nama Suami/Istri</th><td>{{ $pasien->nama_pasangan }}</td></tr>
-                    <tr><th>Alamat</th><td>{{ $pasien->alamat }}</td></tr>
-                    <tr><th>Email</th><td>{{ $pasien->email }}</td></tr>
+                    <tr><th>Nama</th><td><?php echo e($pasien->nama); ?></td></tr>
+                    <tr><th>nik</th><td><?php echo e($pasien->nik); ?></td></tr>
+                    <tr><th>Usia</th><td><?php echo e(Carbon::parse($pasien->tgl_lahir)->age); ?> tahun</td></tr>
+                    <tr><th>Jenis Kelamin</th><td><?php echo e($pasien->jenis_kelamin); ?></td></tr>
+                    <tr><th>Tempat Lahir</th><td><?php echo e($pasien->tempat_lahir); ?></td></tr>
+                    <tr><th>Tanggal Lahir</th><td><?php echo e($pasien->tgl_lahir); ?></td></tr>
+                    <tr><th>No. Telepon</th><td><?php echo e($pasien->no_telp); ?></td></tr>
+                    <tr><th>Nama Suami/Istri</th><td><?php echo e($pasien->nama_pasangan); ?></td></tr>
+                    <tr><th>Alamat</th><td><?php echo e($pasien->alamat); ?></td></tr>
+                    <tr><th>Email</th><td><?php echo e($pasien->email); ?></td></tr>
                 </table>
             </div>
         </div>
     </div>
 </div>
 
-@endsection
+<?php $__env->stopSection(); ?>
+
+<?php echo $__env->make('layouts.main', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH C:\xampp\htdocs\klinik-bidan\resources\views/admin/pasien.blade.php ENDPATH**/ ?>

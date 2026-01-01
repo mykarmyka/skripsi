@@ -68,10 +68,10 @@ Route::prefix('admin')->name('admin.')->group(function () {
 
         // Rekam Medis
         Route::get('/rekam-medis', [RekamMedisController::class, 'index'])->name('rekam-medis');
+        Route::get('/rekam-medis/{id}/detail', [RekamMedisController::class, 'detail'])->name('rekam.detail');
         Route::post('/rekam-medis', [RekamMedisController::class, 'store'])->name('rekam.store');
+        Route::delete('/rekam-medis/{id}', [RekamMedisController::class, 'destroy'])->name('rekam-medis.destroy');
         
-        
-
         // Laporan
         Route::get('/laporan', [AdminController::class, 'laporan'])->name('laporan');
         Route::post('/laporan/filter', [AdminController::class, 'filterLaporan'])->name('laporan.filter');

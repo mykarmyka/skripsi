@@ -3,22 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <title>Pasien</title>
-    <link rel="stylesheet" href="{{ asset('css/main.css') }}">
+    <link rel="stylesheet" href="<?php echo e(asset('css/main.css')); ?>">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-    @stack('styles')
+    <?php echo $__env->yieldPushContent('styles'); ?>
 </head>
 
 <script>
-    @if(session('success'))
-        showNotif("{{ session('success') }}", "success");
-    @endif
+    <?php if(session('success')): ?>
+        showNotif("<?php echo e(session('success')); ?>", "success");
+    <?php endif; ?>
 
-    @if(session('error'))
-        showNotif("{{ session('error') }}", "error");
-    @endif
+    <?php if(session('error')): ?>
+        showNotif("<?php echo e(session('error')); ?>", "error");
+    <?php endif; ?>
 
     function showNotif(message, type = "success") {
         let bg = type === "success" ? "#4CAF50" : "#F44336"; // hijau / merah
@@ -56,32 +56,32 @@
     <!-- Sidebar -->
     <aside class="w-64 bg-white shadow p-5 space-y-4">
         <a href="/" class="d-block mb-4 text-center">
-            <img src="{{ asset('images/logo.png') }}" alt="Logo Klinik" style="width: 200px;" >
+            <img src="<?php echo e(asset('images/logo.png')); ?>" alt="Logo Klinik" style="width: 200px;" >
         </a>
 
         <nav class="space-y-2">
-            <a href="{{ route('user.home') }}" 
-                class="block px-3 py-2 rounded hover:bg-blue-200 {{ request()->routeIs('user.home') ? 'bg-blue-200 font-semibold text-blue-800' : '' }}">
+            <a href="<?php echo e(route('user.home')); ?>" 
+                class="block px-3 py-2 rounded hover:bg-blue-200 <?php echo e(request()->routeIs('user.home') ? 'bg-blue-200 font-semibold text-blue-800' : ''); ?>">
                 <i class="bi bi-house-door"></i> Home
             </a>
 
-            <a href="{{ route('user.pendaftaran') }}"
-                class="block px-3 py-2 rounded hover:bg-blue-200 {{ request()->routeIs('user.pendaftaran') ? 'bg-blue-200 font-semibold text-blue-800' : '' }}">
+            <a href="<?php echo e(route('user.pendaftaran')); ?>"
+                class="block px-3 py-2 rounded hover:bg-blue-200 <?php echo e(request()->routeIs('user.pendaftaran') ? 'bg-blue-200 font-semibold text-blue-800' : ''); ?>">
                 <i class="bi bi-clipboard-check"></i> Layanan Umum
             </a>
 
-            <a href="{{ route('user.pendaftaran-persalinan') }}"
-                class="block px-3 py-2 rounded hover:bg-blue-200 {{ request()->routeIs('user.pendaftaran-persalinan') ? 'bg-blue-200 font-semibold text-blue-800' : '' }}">
+            <a href="<?php echo e(route('user.pendaftaran-persalinan')); ?>"
+                class="block px-3 py-2 rounded hover:bg-blue-200 <?php echo e(request()->routeIs('user.pendaftaran-persalinan') ? 'bg-blue-200 font-semibold text-blue-800' : ''); ?>">
                 <i class="bi bi-clipboard-check"></i> Persalinan
             </a>
 
-            <a href="{{ route('user.riwayat') }}"
-                class="block px-3 py-2 rounded hover:bg-blue-200 {{ request()->routeIs('user.riwayat') ? 'bg-blue-200 font-semibold text-blue-800' : '' }}">
+            <a href="<?php echo e(route('user.riwayat')); ?>"
+                class="block px-3 py-2 rounded hover:bg-blue-200 <?php echo e(request()->routeIs('user.riwayat') ? 'bg-blue-200 font-semibold text-blue-800' : ''); ?>">
                 <i class="bi bi-folder2-open"></i> Riwayat Pasien
             </a>
 
-            <a href="{{ route('user.profil') }}"
-                class="block px-3 py-2 rounded hover:bg-blue-200 {{ request()->routeIs('user.profil') ? 'bg-blue-200 font-semibold text-blue-800' : '' }}">
+            <a href="<?php echo e(route('user.profil')); ?>"
+                class="block px-3 py-2 rounded hover:bg-blue-200 <?php echo e(request()->routeIs('user.profil') ? 'bg-blue-200 font-semibold text-blue-800' : ''); ?>">
                 <i class="bi bi-person"></i> Profil Saya
             </a>
 
@@ -95,7 +95,7 @@
 
     <!-- Content -->
     <main class="flex-1 p-10" style="width: 100%">
-        @yield('content')
+        <?php echo $__env->yieldContent('content'); ?>
     </main>
 
     <!-- Modal Konfirmasi Logout -->
@@ -113,8 +113,8 @@
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
             
             <!-- Logout form -->
-            <form action="{{ route('user.logout') }}" method="POST">
-                @csrf
+            <form action="<?php echo e(route('user.logout')); ?>" method="POST">
+                <?php echo csrf_field(); ?>
                 <button type="submit" class="btn btn-danger">Ya, Logout</button>
             </form>
         </div>
@@ -134,3 +134,4 @@
 
 </body>
 </html>
+<?php /**PATH C:\xampp\htdocs\klinik-bidan\resources\views/user/main.blade.php ENDPATH**/ ?>

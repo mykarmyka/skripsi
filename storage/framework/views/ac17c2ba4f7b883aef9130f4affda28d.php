@@ -52,27 +52,28 @@
             </tr>
         </thead>
         <tbody>
-            @forelse($data as $item)
+            <?php $__empty_1 = true; $__currentLoopData = $data; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $item): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
                 <tr>
-                    <td>{{ $loop->iteration }}</td>
-                    <td>{{ \Carbon\Carbon::parse($item->tgl_rm)->format('d-m-Y') }}</td>
-                    <td>{{ $item->pasien->nama }}</td>
-                    <td>{{ $item->jenisLayanan->nama_layanan }}</td>
-                    <td>{{ $item->diagnosa }}</td>
+                    <td><?php echo e($loop->iteration); ?></td>
+                    <td><?php echo e(\Carbon\Carbon::parse($item->tgl_rm)->format('d-m-Y')); ?></td>
+                    <td><?php echo e($item->pasien->nama); ?></td>
+                    <td><?php echo e($item->jenisLayanan->nama_layanan); ?></td>
+                    <td><?php echo e($item->diagnosa); ?></td>
                 </tr>
-            @empty
+            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>
                 <tr>
                     <td colspan="6" style="text-align: center">Tidak ada data</td>
                 </tr>
-            @endforelse
+            <?php endif; ?>
         </tbody>
     </table>
 
     <div class="footer">
-        <p>{{ \Carbon\Carbon::now()->translatedFormat('d F Y') }}</p>
+        <p><?php echo e(\Carbon\Carbon::now()->translatedFormat('d F Y')); ?></p>
         <p><strong>Tanda tangan Bidan</strong></p>
         <br><br>
         <p>___________________________</p>
     </div>
 </body>
 </html>
+<?php /**PATH C:\xampp\htdocs\klinik-bidan\resources\views/admin/laporan_cetak.blade.php ENDPATH**/ ?>

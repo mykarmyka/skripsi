@@ -1,13 +1,13 @@
-@extends('layouts.main')
-
-@push('styles')
-<link rel="stylesheet" href="{{ asset('css/main.css') }}">
-@endpush
 
 
-@section('title', 'Laporan Kunjungan Pasien')
+<?php $__env->startPush('styles'); ?>
+<link rel="stylesheet" href="<?php echo e(asset('css/main.css')); ?>">
+<?php $__env->stopPush(); ?>
 
-@section('content')
+
+<?php $__env->startSection('title', 'Laporan Kunjungan Pasien'); ?>
+
+<?php $__env->startSection('content'); ?>
 <div class="container">
     <h2 class="text-xl font-semibold mb-4" >Laporan Kunjungan Pasien</h2>
 
@@ -31,11 +31,12 @@
                 <label for="layanan" class="form-label">Jenis Layanan</label>
                 <select name="jenis_layanan" id="layanan" class="form-select">
                     <option value="">Semua Layanan</option>
-                    @foreach($layanan as $item)
-                        <option value="{{ $item->id }}" {{ request('jenis_layanan') == $item->id ? 'selected' : '' }}>
-                            {{ $item->nama_layanan }}
+                    <?php $__currentLoopData = $layanan; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $item): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                        <option value="<?php echo e($item->id); ?>" <?php echo e(request('jenis_layanan') == $item->id ? 'selected' : ''); ?>>
+                            <?php echo e($item->nama_layanan); ?>
+
                         </option>
-                    @endforeach
+                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                 </select>
             </div>
 
@@ -89,19 +90,19 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @forelse ($dataKunjungan as $item)
+                    <?php $__empty_1 = true; $__currentLoopData = $dataKunjungan; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $item): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
                         <tr>
-                            <td>{{ $loop->iteration }}</td>
-                            <td>{{ \Carbon\Carbon::parse($item->tgl_rm)->format('d/m/Y') }}</td>
-                            <td>{{ $item->pasien->nama }}</td>
-                            <td>{{ $item->pendaftaran->jenisLayanan->nama_layanan ?? '-' }}</td>
-                            <td>{{ $item->diagnosa ?? '-' }}</td>
+                            <td><?php echo e($loop->iteration); ?></td>
+                            <td><?php echo e(\Carbon\Carbon::parse($item->tgl_rm)->format('d/m/Y')); ?></td>
+                            <td><?php echo e($item->pasien->nama); ?></td>
+                            <td><?php echo e($item->pendaftaran->jenisLayanan->nama_layanan ?? '-'); ?></td>
+                            <td><?php echo e($item->diagnosa ?? '-'); ?></td>
                         </tr>
-                    @empty
+                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>
                         <tr>
                             <td colspan="6" class="text-center text-muted">Tidak ada data kunjungan ditemukan.</td>
                         </tr>
-                    @endforelse
+                    <?php endif; ?>
                 </tbody>
             </table>
         </div>
@@ -125,7 +126,7 @@
                 <div class="table-responsive" id="laporanTable"></div>
             </div>
             <div class="modal-footer">
-                <a href="{{ route('admin.laporan.pdf', request()->only('tanggal','jenis_layanan')) }}" target="_blank" class="btn btn-success">
+                <a href="<?php echo e(route('admin.laporan.pdf', request()->only('tanggal','jenis_layanan'))); ?>" target="_blank" class="btn btn-success">
                     Download PDF
                 </a>
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
@@ -135,13 +136,13 @@
         </div>
     </div>
 </div>
-@endsection
+<?php $__env->stopSection(); ?>
 
-@push('scripts')
+<?php $__env->startPush('scripts'); ?>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
-    const kunjunganPerBulan = @json($kunjunganPerBulan ?? []);
-    const kunjunganPerMinggu = @json($kunjunganPerMinggu ?? []);
+    const kunjunganPerBulan = <?php echo json_encode($kunjunganPerBulan ?? [], 15, 512) ?>;
+    const kunjunganPerMinggu = <?php echo json_encode($kunjunganPerMinggu ?? [], 15, 512) ?>;
 </script>
 
 <script>
@@ -193,4 +194,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
 });
 </script>
-@endpush
+<?php $__env->stopPush(); ?>
+
+<?php echo $__env->make('layouts.main', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH C:\xampp\htdocs\klinik-bidan\resources\views/admin/laporan.blade.php ENDPATH**/ ?>

@@ -1,12 +1,12 @@
-@extends('layouts.main')
 
-@push('styles')
-<link rel="stylesheet" href="{{ asset('css/rekam-medis.css') }}">
-@endpush
 
-@section('title', 'Rekam Medis')
+<?php $__env->startPush('styles'); ?>
+<link rel="stylesheet" href="<?php echo e(asset('css/rekam-medis.css')); ?>">
+<?php $__env->stopPush(); ?>
 
-@section('content')
+<?php $__env->startSection('title', 'Rekam Medis'); ?>
+
+<?php $__env->startSection('content'); ?>
 <div class="container">
     
     <div class="d-flex justify-content-between align-items-center mb-4">
@@ -16,7 +16,7 @@
         </div>
         <div class="d-flex align-items-center">
             
-            <span class="me-2">Hello, {{ Auth::user()->username }}</span>
+            <span class="me-2">Hello, <?php echo e(Auth::user()->username); ?></span>
             <i class="bi bi-person-circle" style="font-size: 1.5rem;"></i>
         </div>
     </div>
@@ -27,9 +27,9 @@
                 + Input Rekam Medis Baru
             </button>
             <div>
-                <form action="{{ route('admin.rekam-medis') }}" method="GET" class="d-flex align-items-center me-3">
+                <form action="<?php echo e(route('admin.rekam-medis')); ?>" method="GET" class="d-flex align-items-center me-3">
                     <div class="input-group">
-                        <input type="text" name="keyword" class="form-control me-2" placeholder="Search" value="{{ request('keyword') }}" style="width: 200px;">
+                        <input type="text" name="keyword" class="form-control me-2" placeholder="Search" value="<?php echo e(request('keyword')); ?>" style="width: 200px;">
                         <button class="btn btn-primary" type="submit">Cari</button>
                     </div>
                 </form>
@@ -39,8 +39,8 @@
         <div class="modal fade" id="modalRekamMedis" tabindex="-1" aria-labelledby="modalRekamMedisLabel" aria-hidden="true">
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
-                    <form action="{{ route('admin.rekam.store') }}" method="POST">
-                        @csrf
+                    <form action="<?php echo e(route('admin.rekam.store')); ?>" method="POST">
+                        <?php echo csrf_field(); ?>
 
                         <div class="modal-header">
                             <h5 class="modal-title fw-bold" id="modalRekamMedisLabel">Input Rekam Medis Pasien</h5>
@@ -49,50 +49,51 @@
 
                         <div class="modal-body">
 
-                            {{-- PILIH PENDAFTARAN --}}
+                            
                             <div class="mb-3">
                                 <label class="form-label">Pilih Pendaftaran</label>
                                 <select name="id_pendaftaran" class="form-control" required>
                                     <option value="">-- Pilih Pasien Terdaftar --</option>
 
-                                    @foreach ($pendaftaran as $p)
-                                        <option value="{{ $p->id_pendaftaran }}">
-                                            {{ $p->pasien->nama }} — {{ $p->jenisLayanan->nama_layanan }}
-                                            (Antrian: {{ $p->no_antrian }})
+                                    <?php $__currentLoopData = $pendaftaran; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $p): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                        <option value="<?php echo e($p->id_pendaftaran); ?>">
+                                            <?php echo e($p->pasien->nama); ?> — <?php echo e($p->jenisLayanan->nama_layanan); ?>
+
+                                            (Antrian: <?php echo e($p->no_antrian); ?>)
                                         </option>
-                                    @endforeach
+                                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                                 </select>
                             </div>
 
-                            {{-- ADMIN --}}
+                            
                             <input type="hidden" name="id_admin"
-                                value="{{ Auth::check() ? Auth::user()->id_admin : null }}">
+                                value="<?php echo e(Auth::check() ? Auth::user()->id_admin : null); ?>">
 
-                            {{-- Tanggal --}}
+                            
                             <div class="mb-3">
                                 <label class="form-label">Tanggal Kunjungan</label>
-                                <input type="date" name="tgl_rm" class="form-control" value="{{ date('Y-m-d') }}" required>
+                                <input type="date" name="tgl_rm" class="form-control" value="<?php echo e(date('Y-m-d')); ?>" required>
                             </div>
 
-                            {{-- Anamnesa --}}
+                            
                             <div class="mb-3">
                                 <label class="form-label">Anamnesa</label>
                                 <input type="text" name="anamnesa" class="form-control" required>
                             </div>
 
-                            {{-- Diagnosa --}}
+                            
                             <div class="mb-3">
                                 <label class="form-label">Diagnosa</label>
                                 <input type="text" name="diagnosa" class="form-control" required>
                             </div>
 
-                            {{-- Terapi --}}
+                            
                             <div class="mb-3">
                                 <label class="form-label">Terapi</label>
                                 <input type="text" name="terapi" class="form-control" required>
                             </div>
 
-                            {{-- Keterangan --}}
+                            
                             <div class="mb-3">
                                 <label class="form-label">Keterangan</label>
                                 <textarea name="keterangan" class="form-control" required></textarea>
@@ -126,29 +127,29 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @forelse ($rekamMedis as $index => $rm)
+                    <?php $__empty_1 = true; $__currentLoopData = $rekamMedis; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $index => $rm): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
                     <tr>
-                        <td>{{ $index + 1 }}</td>
-                        <td>{{ \Carbon\Carbon::parse($rm->tgl_rm)->format('d-m-Y') }}</td> 
-                        <td>{{ $rm->pasien->nama ?? 'N/A' }}</td> 
-                        <td>{{ $rm->jenisLayanan->nama_layanan ?? 'N/A' }}</td> 
-                        <td>{{ $rm->diagnosa ?? '-' }}</td>
+                        <td><?php echo e($index + 1); ?></td>
+                        <td><?php echo e(\Carbon\Carbon::parse($rm->tgl_rm)->format('d-m-Y')); ?></td> 
+                        <td><?php echo e($rm->pasien->nama ?? 'N/A'); ?></td> 
+                        <td><?php echo e($rm->jenisLayanan->nama_layanan ?? 'N/A'); ?></td> 
+                        <td><?php echo e($rm->diagnosa ?? '-'); ?></td>
                         <td>
-                            <button class="btn btn-link p-0 text-primary btn-edit" data-id="{{ $rm->id_rm }}" title="Detail Rekam Medis">
+                            <button class="btn btn-link p-0 text-primary btn-edit" data-id="<?php echo e($rm->id_rm); ?>" title="Detail Rekam Medis">
                                 <i class="bi bi-pencil-square fs-5"></i>
                             </button>
-                            <form action="{{ route('admin.rekam-medis.destroy', $rm->id_rm) }}" method="POST" style="display:inline">
-                                @csrf
-                                @method('DELETE')
+                            <form action="<?php echo e(route('admin.rekam-medis.destroy', $rm->id_rm)); ?>" method="POST" style="display:inline">
+                                <?php echo csrf_field(); ?>
+                                <?php echo method_field('DELETE'); ?>
                                 <button onclick="return confirm('Yakin hapus data?')" class="btn btn-link p-0 text-danger" title="Hapus"><i class="bi bi-trash fs-5"></i></button>
                             </form>
                         </td>
                     </tr>
-                    @empty
+                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>
                     <tr>
                         <td colspan="6" class="text-center">Tidak ada data rekam medis</td>
                     </tr>
-                    @endforelse 
+                    <?php endif; ?> 
                 </tbody>
             </table>
 
@@ -178,7 +179,8 @@
 
 
             <div class="d-flex justify-content-end mt-3">
-                {{ $rekamMedis->links() }}
+                <?php echo e($rekamMedis->links()); ?>
+
             </div>
 
         </div>
@@ -194,7 +196,7 @@
                 </div>
 
                 <div class="modal-body" id="detail-rekam">
-                    {{-- Data akan dimasukkan oleh AJAX --}}
+                    
                 </div>
 
                 <div class="modal-footer">
@@ -206,9 +208,9 @@
 
 </div>
 
-@endsection
+<?php $__env->stopSection(); ?>
 
-@push('scripts')
+<?php $__env->startPush('scripts'); ?>
 <script>
 $(document).on('click', '.btn-edit', function() {
     let id = $(this).data('id');
@@ -260,4 +262,6 @@ $(document).on('click', '.btn-edit', function() {
 
 });
 </script>
-@endpush
+<?php $__env->stopPush(); ?>
+
+<?php echo $__env->make('layouts.main', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH C:\xampp\htdocs\klinik-bidan\resources\views/admin/rekam-medis.blade.php ENDPATH**/ ?>

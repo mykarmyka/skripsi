@@ -1,15 +1,15 @@
-@extends('layouts.main')
 
-@push('styles')
-<link rel="stylesheet" href="{{ asset('css/pasien.css') }}">
 
-@endpush
+<?php $__env->startPush('styles'); ?>
+<link rel="stylesheet" href="<?php echo e(asset('css/pasien.css')); ?>">
 
-@php use Carbon\Carbon; @endphp
+<?php $__env->stopPush(); ?>
 
-@section('title-pasien', 'Data Pasien')
+<?php use Carbon\Carbon; ?>
 
-@section('content')
+<?php $__env->startSection('title-pasien', 'Data Pasien'); ?>
+
+<?php $__env->startSection('content'); ?>
 <div class="container">
 
     <div class="d-flex justify-content-between align-items-center mb-4">
@@ -18,7 +18,7 @@
             <p class='mb-4'>Kelola daftar jenis layanan yang tersedia di praktik bidan</p>
         </div>
         <div class="d-flex align-items-center">
-            <span class="me-2">Hello, {{ Auth::user()->username }}</span>
+            <span class="me-2">Hello, Admin</span>
             <i class="bi bi-person-circle" style="font-size: 1.5rem;"></i>
         </div>
     </div>
@@ -29,8 +29,8 @@
                 + Tambah Layanan
             </button>
 
-            <form action="{{ route('admin.jenis-layanan') }}" method="get" class="d-flex align-items-center me-3">
-                <input type="text" class="form-control me-2" name="search" value="{{ request('search') }}" placeholder="Cari layanan...">
+            <form action="<?php echo e(route('admin.jenis-layanan')); ?>" method="get" class="d-flex align-items-center me-3">
+                <input type="text" class="form-control me-2" name="search" value="<?php echo e(request('search')); ?>" placeholder="Cari layanan...">
                 <button type="submit" class="btn btn-outline-primary">Cari</button>
             </form>
         </div>
@@ -39,8 +39,8 @@
         <div class="modal fade" id="modalTambahLayanan" tabindex="-1" aria-labelledby="modalTambahLayananLabel" aria-hidden="true">
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
-                    <form action="{{ route('admin.jenis-layanan.store') }}" method="POST">
-                        @csrf
+                    <form action="<?php echo e(route('admin.jenis-layanan.store')); ?>" method="POST">
+                        <?php echo csrf_field(); ?>
                         <div class="modal-header">
                             <h5 class="modal-title fw-bold" id="modalTambahLayananLabel">Tambah Jenis Layanan Baru</h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
@@ -75,33 +75,35 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @forelse ($dataLayanan as $index => $layanan)
+                    <?php $__empty_1 = true; $__currentLoopData = $dataLayanan; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $index => $layanan): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
                     <tr>
-                        <td>{{ $index + 1 }}</td>
-                        <td>{{ $layanan->nama_layanan }}</td>
-                        <td>{{ $layanan->durasi }}</td>
+                        <td><?php echo e($index + 1); ?></td>
+                        <td><?php echo e($layanan->nama_layanan); ?></td>
+                        <td><?php echo e($layanan->durasi); ?></td>
                         <td>
                             <a href="#" class="btn btn-sm btn-warning" title="Edit">
                                 <i class="bi bi-pencil"></i>
                             </a>
-                            <form action="{{ route('admin.jenis-layanan.destroy', $layanan->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Yakin ingin menghapus layanan ini?')">
-                                @csrf
-                                @method('DELETE')
+                            <form action="<?php echo e(route('admin.jenis-layanan.destroy', $layanan->id)); ?>" method="POST" class="d-inline" onsubmit="return confirm('Yakin ingin menghapus layanan ini?')">
+                                <?php echo csrf_field(); ?>
+                                <?php echo method_field('DELETE'); ?>
                                 <button class="btn btn-sm btn-danger" title="Hapus">
                                     <i class="bi bi-trash"></i>
                                 </button>
                             </form>
                         </td>
                     </tr>
-                    @empty
+                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>
                     <tr>
                         <td colspan="6">Belum ada data layanan.</td>
                     </tr>
-                    @endforelse
+                    <?php endif; ?>
                 </tbody>
             </table>
         </div>
     </div>
 </div>
 
-@endsection
+<?php $__env->stopSection(); ?>
+
+<?php echo $__env->make('layouts.main', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH C:\xampp\htdocs\klinik-bidan\resources\views/admin/jenis-layanan.blade.php ENDPATH**/ ?>

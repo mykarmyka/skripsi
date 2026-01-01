@@ -1,12 +1,12 @@
-@extends('layouts.main')
 
-@push('styles')
-<link rel="stylesheet" href="{{ asset('css/obat.css') }}">
-@endpush
 
-@section('title', 'Daftar Nama Obat')
+<?php $__env->startPush('styles'); ?>
+<link rel="stylesheet" href="<?php echo e(asset('css/obat.css')); ?>">
+<?php $__env->stopPush(); ?>
 
-@section('content')
+<?php $__env->startSection('title', 'Daftar Nama Obat'); ?>
+
+<?php $__env->startSection('content'); ?>
 <div class="container">
 
     <div class="d-flex justify-content-between align-items-center mb-4">
@@ -15,7 +15,7 @@
             <p class="deskripsi">Periksa dan perbarui status pendaftaran layanan medis pasien secara menyeluruh</p>
         </div>
         <div class="d-flex align-items-center">
-            <span class="me-2">Hello, {{ Auth::user()->username }}</span>
+            <span class="me-2">Hello, Admin</span>
             <i class="bi bi-person-circle" style="font-size: 1.5rem;"></i>
         </div>
     </div>
@@ -34,8 +34,8 @@
         <div class="modal fade" id="modalTambahObat" tabindex="-1" aria-labelledby="modalTambahObatLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
-            <form action="{{ route('admin.obat.store') }}" method="POST">
-                @csrf
+            <form action="<?php echo e(route('admin.obat.store')); ?>" method="POST">
+                <?php echo csrf_field(); ?>
                 <div class="modal-header">
                 <h5 class="modal-title fw-bold" id="modalTambahObatLabel">Tambah Obat Baru</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tutup"></button>
@@ -75,27 +75,27 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @php $obats = [
+                    <?php $obats = [
                         ['nama' => 'Paracetamol', 'jenis' => 'Sirup & Tablet', 'stok' => 25],
                         ['nama' => 'Fe (Zat Besi)', 'jenis' => 'Tablet', 'stok' => 16],
                         ['nama' => 'Asam Folat', 'jenis' => 'Tablet', 'stok' => 30],
                         ['nama' => 'Metronidazol', 'jenis' => 'Tablet', 'stok' => 27],
                         ['nama' => 'Amoxicilline', 'jenis' => 'Tablet', 'stok' => 20],
                         ['nama' => 'Vaksin Tetanus Toksoid', 'jenis' => 'Suntik', 'stok' => 15]
-                    ]; @endphp
+                    ]; ?>
 
-                    @foreach ($obats as $index => $obat)
+                    <?php $__currentLoopData = $obats; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $index => $obat): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                     <tr>
-                        <td>{{ $index + 1 }}</td>
-                        <td>{{ $obat['nama'] }}</td>
-                        <td>{{ $obat['jenis'] }}</td>
-                        <td>{{ $obat['stok'] }}</td>
+                        <td><?php echo e($index + 1); ?></td>
+                        <td><?php echo e($obat['nama']); ?></td>
+                        <td><?php echo e($obat['jenis']); ?></td>
+                        <td><?php echo e($obat['stok']); ?></td>
                         <td>
                             <button class="btn btn-edit" title="Edit"><i class="bi bi-pencil-square"></i></button>
                             <button class="btn btn-delete" title="Hapus"><i class="bi bi-trash"></i></button>
                         </td>
                     </tr>
-                    @endforeach
+                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                 </tbody>
             </table>
         </div>
@@ -117,4 +117,6 @@
         </div>
     </div>
 </div>
-@endsection
+<?php $__env->stopSection(); ?>
+
+<?php echo $__env->make('layouts.main', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH C:\xampp\htdocs\klinik-bidan\resources\views/admin/obat.blade.php ENDPATH**/ ?>

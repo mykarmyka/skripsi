@@ -12,6 +12,7 @@ class JenisLayanan extends Model
     protected $table = 'jenis_layanan';
 
     protected $fillable = [
+        'id',
         'nama_layanan',
         'durasi',
     ];
@@ -20,4 +21,10 @@ class JenisLayanan extends Model
     {
         return $this->hasMany(PendaftaranLayanan::class, 'id_jenis_layanan');
     }
+
+    public function rekamMedis()
+    {
+        return $this->hasMany(RekamMedis::class, 'id_jenis_layanan', 'id');
+    }
+
 }

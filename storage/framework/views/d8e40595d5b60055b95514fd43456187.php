@@ -1,6 +1,6 @@
-@extends('layouts.main')
 
-@section('content')
+
+<?php $__env->startSection('content'); ?>
 
     <!-- Main Content -->
             <div class="d-flex justify-content-between align-items-center mb-4">
@@ -10,22 +10,22 @@
                 </div>
                 <div class="d-flex align-items-center">
                     <input type="text" class="form-control me-2" placeholder="Search" style="width: 200px;">
-                    <span class="me-2">Hello, {{ Auth::user()->username }}</span>
+                    <span class="me-2">Hello, <?php echo e(Auth::user()->username); ?></span>
                     <i class="bi bi-person-circle" style="font-size: 1.5rem;"></i>
                 </div>
             </div>
 
     <div class="grid grid-cols-2 gap-10 mb-10">
-        <a href="{{ route('admin.pasien') }}" class="block hover:scale-105 transition-transform">
+        <a href="<?php echo e(route('admin.pasien')); ?>" class="block hover:scale-105 transition-transform">
             <div class="bg-white p-5 rounded shadow">
-                <div class="text-2xl font-bold">{{ $jumlahPasien }}</div>
+                <div class="text-2xl font-bold"><?php echo e($jumlahPasien); ?></div>
                 <p class="text-gray-600">Jumlah Pasien</p>
             </div>
         </a>    
         
-        <a href="{{ route('admin.layanan') }}" class="block hover:scale-105 transition-transform">
+        <a href="<?php echo e(route('admin.layanan')); ?>" class="block hover:scale-105 transition-transform">
             <div class="bg-white p-5 rounded shadow">
-                <div class="text-2xl font-bold">{{ $jumlahAntrian }}</div>
+                <div class="text-2xl font-bold"><?php echo e($jumlahAntrian); ?></div>
                 <p class="text-gray-600">Antrian Pasien</p>
             </div>
         </a>
@@ -48,48 +48,57 @@
                 </tr>
             </thead>
             <tbody>
-            @if($rekamMedis->count())
-                @foreach($rekamMedis as $index => $rm)
+            <?php if($rekamMedis->count()): ?>
+                <?php $__currentLoopData = $rekamMedis; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $index => $rm): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                     <tr>
-                        <td class="p-2 border text-center">{{ $index + 1 }}</td>
+                        <td class="p-2 border text-center"><?php echo e($index + 1); ?></td>
 
                         <td class="p-2 border">
-                            {{ \Carbon\Carbon::parse($rm->tgl_rm)->format('d-m-Y') }}
+                            <?php echo e(\Carbon\Carbon::parse($rm->tgl_rm)->format('d-m-Y')); ?>
+
                         </td>
 
                         <td class="p-2 border">
-                            {{ $rm->jenisLayanan->nama_layanan ?? '-' }}
+                            <?php echo e($rm->jenisLayanan->nama_layanan ?? '-'); ?>
+
                         </td>
 
                         <td class="p-2 border">
-                            {{ $rm->pasien->nama ?? '-' }}
+                            <?php echo e($rm->pasien->nama ?? '-'); ?>
+
                         </td>
 
                         <td class="p-2 border">
-                            {{ $rm->anamnesa ?? '-' }}
+                            <?php echo e($rm->anamnesa ?? '-'); ?>
+
                         </td>
 
                         <td class="p-2 border">
-                            {{ $rm->diagnosa ?? '-' }}
+                            <?php echo e($rm->diagnosa ?? '-'); ?>
+
                         </td>
 
                         <td class="p-2 border">
-                            {{ $rm->terapi ?? '-' }}
+                            <?php echo e($rm->terapi ?? '-'); ?>
+
                         </td>
 
                         <td class="p-2 border">
-                            {{ $rm->keterangan ?? '-' }}
+                            <?php echo e($rm->keterangan ?? '-'); ?>
+
                         </td>
                     </tr>
-                @endforeach
-            @else
+                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+            <?php else: ?>
                 <tr>
                     <td colspan="8" class="p-2 text-center text-gray-500">
                         Tidak ada data
                     </td>
                 </tr>
-            @endif
+            <?php endif; ?>
             </tbody>
         </table>
     </div>
-@endsection
+<?php $__env->stopSection(); ?>
+
+<?php echo $__env->make('layouts.main', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH C:\xampp\htdocs\klinik-bidan\resources\views/admin/dashboard.blade.php ENDPATH**/ ?>

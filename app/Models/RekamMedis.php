@@ -13,7 +13,7 @@ class RekamMedis extends Model
     use HasFactory;
 
     protected $table = 'rekam_medis';
-    protected $primaryKey = 'id_rm';
+    
     public $incrementing = false;
     protected $keyType = 'string';
 
@@ -22,7 +22,7 @@ class RekamMedis extends Model
         'id_pasien', 
         'id_pendaftaran', 
         'id_admin',
-        'id_jwenis_layanan',
+        'id_jenis_layanan',
         'tgl_rm',
         'anamnesa', 
         'diagnosa', 
@@ -42,5 +42,9 @@ class RekamMedis extends Model
         return $this->belongsTo(PendaftaranLayanan::class, 'id_pendaftaran', 'id_pendaftaran');
     }
 
-    
+    public function jenisLayanan()
+    {
+        return $this->belongsTo(JenisLayanan::class, 'id_jenis_layanan', 'id');
+    }
+
 }

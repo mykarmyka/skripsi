@@ -1,12 +1,12 @@
-@extends('layouts.main')
 
-@push('styles')
-<link rel="stylesheet" href="{{ asset('css/rekam-medis.css') }}">
-@endpush
 
-@section('title', 'Layanan')
+<?php $__env->startPush('styles'); ?>
+<link rel="stylesheet" href="<?php echo e(asset('css/rekam-medis.css')); ?>">
+<?php $__env->stopPush(); ?>
 
-@section('content')
+<?php $__env->startSection('title', 'Layanan'); ?>
+
+<?php $__env->startSection('content'); ?>
 <div class="container">
     
     <div class="d-flex justify-content-between align-items-center mb-4">
@@ -16,7 +16,7 @@
         </div>
         <div class="d-flex align-items-center">
             
-            <span class="me-2">Hello, {{ Auth::user()->username }}</span>
+            <span class="me-2">Hello, <?php echo e(Auth::user()->username); ?></span>
             <i class="bi bi-person-circle" style="font-size: 1.5rem;"></i>
         </div>
     </div>
@@ -45,46 +45,46 @@
                     </tr>
                 </thead>
                 <tbody>
-                   @foreach ($pendaftaran as $i => $daftar)
+                   <?php $__currentLoopData = $pendaftaran; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $i => $daftar): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                     <tr>
-                        <td>{{ $daftar->no_antrian }}</td>
-                        <td>{{ $daftar->pasien->nama }}</td>
-                        <td>{{ $daftar->jenisLayanan->nama_layanan ?? '-' }}</td>
-                        <td>{{ \Carbon\Carbon::parse($daftar['tgl_pendaftaran'])->format('d-m-Y') }}</td>
+                        <td><?php echo e($daftar->no_antrian); ?></td>
+                        <td><?php echo e($daftar->pasien->nama); ?></td>
+                        <td><?php echo e($daftar->jenisLayanan->nama_layanan ?? '-'); ?></td>
+                        <td><?php echo e(\Carbon\Carbon::parse($daftar['tgl_pendaftaran'])->format('d-m-Y')); ?></td>
                         <td>
-                            @if ($daftar->status == 'waiting')
-                                <button class="btn btn-link p-0 text-success" data-bs-toggle="modal" data-bs-target="#rekamMedisModal{{ $daftar->id_pendaftaran }}" title="Isi Rekam Medis">
+                            <?php if($daftar->status == 'waiting'): ?>
+                                <button class="btn btn-link p-0 text-success" data-bs-toggle="modal" data-bs-target="#rekamMedisModal<?php echo e($daftar->id_pendaftaran); ?>" title="Isi Rekam Medis">
                                     <i class="bi bi-journal-medical fs-5"></i>
                                 </button>
-                            @else
+                            <?php else: ?>
                                 <span class="text-muted">Sudah Diisi</span>
-                            @endif
+                            <?php endif; ?>
                         </td>
                         <td>
-                            @if ($daftar->status == 'waiting')
+                            <?php if($daftar->status == 'waiting'): ?>
                                 <span class="badge bg-warning">Menunggu</span>
-                            @elseif ($daftar->status == 'hadir')
+                            <?php elseif($daftar->status == 'hadir'): ?>
                                 <span class="badge bg-success">Hadir</span>
-                            @elseif ($daftar->status == 'done')
+                            <?php elseif($daftar->status == 'done'): ?>
                                 <span class="badge bg-primary">Selesai</span>
-                            @endif
+                            <?php endif; ?>
                         </td>
                     </tr>
 
-                    {{-- Modal Rekam Medis --}}
-                    <div class="modal fade" id="rekamMedisModal{{ $daftar->id_pendaftaran }}" tabindex="-1" aria-labelledby="rekamMedisModalLabel{{ $daftar->id_pendaftaran }}" aria-hidden="true">
+                    
+                    <div class="modal fade" id="rekamMedisModal<?php echo e($daftar->id_pendaftaran); ?>" tabindex="-1" aria-labelledby="rekamMedisModalLabel<?php echo e($daftar->id_pendaftaran); ?>" aria-hidden="true">
                         <div class="modal-dialog modal-lg">
                             <div class="modal-content">
-                                <form action="{{ route('admin.pendaftaran.simpanRekamMedis', $daftar->id_pendaftaran) }}" method="POST">
-                                    @csrf
+                                <form action="<?php echo e(route('admin.pendaftaran.simpanRekamMedis', $daftar->id_pendaftaran)); ?>" method="POST">
+                                    <?php echo csrf_field(); ?>
                                     <div class="modal-header">
-                                        <h5 class="modal-title" id="rekamMedisModalLabel{{ $daftar->id_pendaftaran }}">Isi Rekam Medis - {{ $daftar->pasien->nama }}</h5>
+                                        <h5 class="modal-title" id="rekamMedisModalLabel<?php echo e($daftar->id_pendaftaran); ?>">Isi Rekam Medis - <?php echo e($daftar->pasien->nama); ?></h5>
                                         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                                     </div>
                                     <div class="modal-body">
                                         <div class="mb-3">
                                             <label>Tanggal Rekam Medis</label>
-                                            <input type="date" name="tgl_rm" class="form-control" value="{{ now()->format('Y-m-d') }}" required>
+                                            <input type="date" name="tgl_rm" class="form-control" value="<?php echo e(now()->format('Y-m-d')); ?>" required>
                                         </div>
                                         <div class="mb-3">
                                             <label>Keluhan</label>
@@ -111,17 +111,20 @@
                             </div>
                         </div>
                     </div>
-                    @endforeach
+                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                 </tbody>
             </table>
 
             <div class="d-flex justify-content-end mt-3">
-                {{ $pendaftaran->links() }}
+                <?php echo e($pendaftaran->links()); ?>
+
             </div>
 
         </div>
     </div>
 </div>
-@endsection
+<?php $__env->stopSection(); ?>
 
 
+
+<?php echo $__env->make('layouts.main', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH C:\xampp\htdocs\klinik-bidan\resources\views/admin/layanan.blade.php ENDPATH**/ ?>

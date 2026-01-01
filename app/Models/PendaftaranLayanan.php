@@ -32,7 +32,7 @@ class PendaftaranLayanan extends Model
 
     public function jenisLayanan()
     {
-        return $this->belongsTo(JenisLayanan::class, 'id_jenis_layanan');
+        return $this->belongsTo(JenisLayanan::class, 'id_jenis_layanan', 'id');
     }
 
     public function rekamMedis()

@@ -1,12 +1,12 @@
-@extends('user.main')
 
-@push('styles')
-<link rel="stylesheet" href="{{ asset('css/home.css') }}">
-@endpush
 
-@section('title', 'Riwayat - Klinik')
+<?php $__env->startPush('styles'); ?>
+<link rel="stylesheet" href="<?php echo e(asset('css/home.css')); ?>">
+<?php $__env->stopPush(); ?>
 
-@section('content')
+<?php $__env->startSection('title', 'Riwayat - Klinik'); ?>
+
+<?php $__env->startSection('content'); ?>
 <div class="container">
 
     <div class="card-obat">
@@ -31,24 +31,25 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @forelse ($riwayat as $data)
+                    <?php $__empty_1 = true; $__currentLoopData = $riwayat; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $data): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
                         <tr>
                             
-                            <td>{{ $data->jenisLayanan->nama_layanan ?? '-' }}</td>
-                            <td>{{ $data->created_at->format('d M Y, H:i') }} WIB</td>
-                            <td>{{ $data['no_antrian'] }}</td>
-                            <td>{{ $data['status'] ?? '-' }}</td>
+                            <td><?php echo e($data->jenisLayanan->nama_layanan ?? '-'); ?></td>
+                            <td><?php echo e($data->created_at->format('d M Y, H:i')); ?> WIB</td>
+                            <td><?php echo e($data['no_antrian']); ?></td>
+                            <td><?php echo e($data['status'] ?? '-'); ?></td>
                         </tr>
-                    @empty
+                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>
                         <tr>
                             <td colspan="4" class="text-center">Belum ada pendaftaran.</td>
                         </tr>
-                    @endforelse
+                    <?php endif; ?>
                 </tbody>
             </table>
             
             <div class="d-flex justify-content-end mt-3">
-                {{ $riwayat->links() }}
+                <?php echo e($riwayat->links()); ?>
+
             </div>
         </div>
     </div>
@@ -61,4 +62,6 @@
     
 
 </div>
-@endsection
+<?php $__env->stopSection(); ?>
+
+<?php echo $__env->make('user.main', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH C:\xampp\htdocs\klinik-bidan\resources\views/user/riwayat.blade.php ENDPATH**/ ?>

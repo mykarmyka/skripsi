@@ -4,12 +4,6 @@
 <link rel="stylesheet" href="{{ asset('css/home.css') }}">
 @endpush
 
-@if (session('success'))
-    <div class="alert alert-success">
-        {{ session('success') }}
-    </div>
-@endif
-
 @section('title', 'Home - Klinik')
 
 @section('content')

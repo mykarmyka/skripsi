@@ -53,46 +53,23 @@ class RekamMedisController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            
             'id_pendaftaran' => 'required|exists:pendaftaran_layanan,id_pendaftaran',
             'id_admin' => 'required|exists:admin,id_admin',
             'tgl_rm' => 'required|date',
-            'anamnesa' => 'required|string|',
-            'diagnosa' => 'required|string|',
+            'anamnesa' => 'required|string',
+            'diagnosa' => 'required|string',
             'terapi' => 'required|string',
             'keterangan' => 'required|string',
         ]);
 
-        $pendaftaran = \App\Models\PendaftaranLayanan::with(['pasien','jenisLayanan'])
+        $pendaftaran = PendaftaranLayanan::with(['pasien','jenisLayanan'])
             ->findOrFail($request->id_pendaftaran);
 
-        // Cek apakah pasien ini sudah punya rekam medis
-        $existingRM = RekamMedis::where('id_pasien', $pendaftaran->id_pasien)->first();
+        $pasien = $pendaftaran->pasien;
 
-        if ($existingRM) {
-            // kalau sudah ada → update data lama
-            $existingRM->update([
-                'id_pendaftaran' => $request->id_pendaftaran,
-                'id_admin' => $request->id_admin,
-                'id_jenis_layanan' => $pendaftaran->id_jenis_layanan,
-                'tgl_rm' => $request->tgl_rm,
-                'anamnesa' => $request->anamnesa,
-                'diagnosa' => $request->diagnosa,
-                'terapi' => $request->terapi,
-                'keterangan' => $request->keterangan,
-            ]);
-        } else {
-
-        $last = RekamMedis::orderBy('id_rm', 'desc')->first();
-        if ($last) {
-            $lastNumber = intval(substr($last->id_rm, 2)); // ambil angka setelah "RM"
-            $newId = 'RM' . str_pad($lastNumber + 1, 4, '0', STR_PAD_LEFT);
-        } else {
-            $newId = 'RM0001';
-        }
-        
+        // ⬇️ SELALU INSERT DATA BARU
         RekamMedis::create([
-            'id_rm' => $newId,
+            'id_rm' => $pasien->id_rm,
             'id_pasien' => $pendaftaran->id_pasien,
             'id_pendaftaran' => $request->id_pendaftaran,
             'id_admin' => $request->id_admin,
@@ -103,10 +80,11 @@ class RekamMedisController extends Controller
             'terapi' => $request->terapi,
             'keterangan' => $request->keterangan,
         ]);
-    }    
 
-        return redirect()->route('admin.rekam-medis')->with('success', 'Rekam medis berhasil ditambahkan!');
+        return redirect()->route('admin.rekam-medis')
+            ->with('success', 'Rekam medis berhasil ditambahkan!');
     }
+
 
     public function pencarian(Request $request)
     {
@@ -141,5 +119,24 @@ class RekamMedisController extends Controller
 
         return view('admin.rekam-medis', compact('pendaftaran'));
     }
+
+    public function detail($id)
+    {
+        $rekam = RekamMedis::with(['pendaftaran.pasien', 'pendaftaran.jenisLayanan'])
+                     ->where('id_rm', $id)
+                     ->firstOrFail();
+
+        
+        $riwayat = RekamMedis::where('id_pasien', $rekam->id_pasien)
+                    ->where('id_rm', '!=', $rekam->id_rm)
+                    ->orderBy('tgl_rm', 'desc')
+                    ->get();
+
+        return response()->json([
+            'rekam' => $rekam,
+            'riwayat' => $riwayat
+        ]);
+    }
+
 
 }
