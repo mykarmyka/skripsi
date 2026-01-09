@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\Admin;
 
+use Exception;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -28,46 +30,67 @@ class AdminController extends Controller
 
     public function login(Request $request)
     {   
-        
-        $request->validate([
-            'email' => 'required|email',
-            'password' => 'required|string',
-        ]);
+        try {
+            $request->validate([
+                'email' => 'required|email',
+                'password' => 'required|string',
+            ]);
 
-        $credentials = $request->only('email', 'password');
+            $credentials = $request->only('email', 'password');
 
-        if (Auth::guard('admin')->attempt($credentials)) {
-           $user = Auth::guard('admin')->user();
+            if (Auth::guard('admin')->attempt($credentials)) {
+            $user = Auth::guard('admin')->user();
 
-           $roles = $user->roles;
-            
-            if ($user->hasRole('bidan') || $user->hasRole('staff')) {
+            $roles = $user->roles;
                 
-                return redirect()->intended(route('admin.dashboard'));
-            } else {
-                
-                Auth::guard('admin')->logout();
-                $request->session()->invalidate();
-                $request->session()->regenerateToken();
-                
-                return redirect()->route('admin.login')->with('error', 'Akses ditolak. Role tidak valid.');
-            }    
-    }}
+                if ($user->hasRole('bidan') || $user->hasRole('staff')) {
+                    
+                    return redirect()->intended(route('admin.dashboard'));
+                } else {
+                    
+                    Auth::guard('admin')->logout();
+                    $request->session()->invalidate();
+                    $request->session()->regenerateToken();
+                    
+                    return redirect()->route('admin.login')->with('error', 'Akses ditolak. Role tidak valid.');
+                }    
+            }
+        } catch (Exception $e) {
+            Log::error($e->getMessage());
+            return back()->with('error', 'Terjadi kesalahan sistem saat login.');
+        }    
+    }
 
-    public function dashboard()
+    public function dashboard(Request $request)
     {
-        $jumlahPasien = Pasien::count();
-        $jumlahAntrian = PendaftaranLayanan::where('status', 'waiting')
-            ->whereDate('tgl_pendaftaran', now()->toDateString())
-            ->count();
+        try {
+            $jumlahPasien = Pasien::count();
+            $jumlahAntrian = PendaftaranLayanan::where('status', 'waiting')
+                ->whereDate('tgl_pendaftaran', now()->toDateString())
+                ->count();
 
-        $rekamMedis = RekamMedis::with(['pendaftaran.pasien'])->orderBy('created_at', 'desc')->get();
-        
-        return view('admin.dashboard', compact(
-            'jumlahPasien',
-            'jumlahAntrian',
-            'rekamMedis'
-        )); 
+            $rekamMedis = RekamMedis::with(['pasien', 'jenisLayanan'])
+            ->when($request->search, function ($q) use ($request) {
+                $q->whereHas('pasien', function ($p) use ($request) {
+                    $p->where('nama', 'like', '%'.$request->search.'%');
+                })
+                ->orWhereHas('jenisLayanan', function ($l) use ($request) {
+                    $l->where('nama_layanan', 'like', '%'.$request->search.'%');
+                })
+                ->orWhere('tgl_rm', 'like', '%'.$request->search.'%');
+            })
+            ->orderBy('tgl_rm', 'desc')
+            ->get();
+            
+            return view('admin.dashboard', compact(
+                'jumlahPasien',
+                'jumlahAntrian',
+                'rekamMedis'
+            )); 
+        } catch (Exception $e) {
+            Log::error($e->getMessage());
+            return back()->with('error', 'Gagal memuat dashboard.');
+        }   
     }
 
     public function index()
@@ -80,16 +103,24 @@ class AdminController extends Controller
         return view('admin.obat');
     }
 
-    public function lihatPendaftaran()
+    public function lihatPendaftaran(Request $request)
     {
-        $pendaftaran = PendaftaranLayanan::with('pasien', 'jenisLayanan') 
-            ->where('status', '!=', 'done')    
-            ->orderBy('tgl_pendaftaran', 'desc')
-            ->paginate(10);
+        $pendaftaran = PendaftaranLayanan::with(['pasien', 'jenisLayanan'])
+        ->when($request->search, function ($q) use ($request) {
 
-        $admin = Admin::orderBy('username')->get();    
+            $q->whereHas('pasien', function ($p) use ($request) {
+                $p->where('nama', 'like', '%'.$request->search.'%');
+            })
+            ->orWhereHas('jenisLayanan', function ($l) use ($request) {
+                $l->where('nama_layanan', 'like', '%'.$request->search.'%');
+            });
 
-        return view('admin.layanan', compact('pendaftaran', 'admin'));
+        })
+        ->where('status', '!=', 'done')
+        ->orderBy('tgl_pendaftaran', 'desc')
+        ->paginate(10);
+
+        return view('admin.layanan', compact('pendaftaran'));
     }
 
     public function updateStatus(Request $request, $id)
@@ -108,56 +139,58 @@ class AdminController extends Controller
     
     public function laporan(Request $request)
     {
-        $layanan = JenisLayanan::all();
+        try {
+            $layanan = JenisLayanan::all();
 
-        $query = RekamMedis::with(['pasien', 'jenisLayanan']);
+            $query = RekamMedis::with(['pasien', 'jenisLayanan']);
 
-        if ($request->filled('jenis_layanan')) {
-            $query->where('id_jenis_layanan', $request->jenis_layanan);
-        }
-
-        if ($request->filled('filter_type') && $request->filled('tanggal')) {
-            $tanggal = Carbon::parse($request->tanggal);
-
-            if ($request->filter_type === 'mingguan') {
-                $query->whereBetween('tgl_rm', [
-                    $tanggal->copy()->startOfWeek(),
-                    $tanggal->copy()->endOfWeek()
-                ]);
-            } elseif ($request->filter_type === 'bulanan') {
-                $query->whereMonth('tgl_rm', $tanggal->month)
-                    ->whereYear('tgl_rm', $tanggal->year);
+            if ($request->filled('jenis_layanan')) {
+                $query->where('id_jenis_layanan', $request->jenis_layanan);
             }
-        }
 
-        $dataKunjungan = $query->orderBy('tgl_rm', 'desc')->get();
+            if ($request->filled('filter_type') && $request->filled('tanggal')) {
+                $tanggal = Carbon::parse($request->tanggal);
 
-        // ======================
-        // DATA GRAFIK
-        // ======================
+                if ($request->filter_type === 'mingguan') {
+                    $query->whereBetween('tgl_rm', [
+                        $tanggal->copy()->startOfWeek(),
+                        $tanggal->copy()->endOfWeek()
+                    ]);
+                } elseif ($request->filter_type === 'bulanan') {
+                    $query->whereMonth('tgl_rm', $tanggal->month)
+                        ->whereYear('tgl_rm', $tanggal->year);
+                }
+            }
 
-        $kunjunganPerBulan = PendaftaranLayanan::selectRaw(
-                'MONTH(tgl_pendaftaran) as bulan, COUNT(*) as jumlah'
-            )
-            ->whereYear('tgl_pendaftaran', now()->year)
-            ->groupBy('bulan')
-            ->orderBy('bulan')
-            ->pluck('jumlah', 'bulan');
+            $dataKunjungan = $query->orderBy('tgl_rm', 'desc')->get();
 
-        $kunjunganPerMinggu = PendaftaranLayanan::selectRaw(
-                'WEEK(tgl_pendaftaran, 1) as minggu, COUNT(*) as jumlah'
-            )
-            ->whereMonth('tgl_pendaftaran', now()->month)
-            ->groupBy('minggu')
-            ->orderBy('minggu')
-            ->pluck('jumlah', 'minggu');
+            // DATA GRAFIK
+            $kunjunganPerBulan = PendaftaranLayanan::selectRaw(
+                    'MONTH(tgl_pendaftaran) as bulan, COUNT(*) as jumlah'
+                )
+                ->whereYear('tgl_pendaftaran', now()->year)
+                ->groupBy('bulan')
+                ->orderBy('bulan')
+                ->pluck('jumlah', 'bulan');
 
-        return view('admin.laporan', compact(
-            'dataKunjungan',
-            'layanan',
-            'kunjunganPerBulan',
-            'kunjunganPerMinggu'
-        ));
+            $kunjunganPerMinggu = PendaftaranLayanan::selectRaw(
+                    'WEEK(tgl_pendaftaran, 1) as minggu, COUNT(*) as jumlah'
+                )
+                ->whereMonth('tgl_pendaftaran', now()->month)
+                ->groupBy('minggu')
+                ->orderBy('minggu')
+                ->pluck('jumlah', 'minggu');
+
+            return view('admin.laporan', compact(
+                'dataKunjungan',
+                'layanan',
+                'kunjunganPerBulan',
+                'kunjunganPerMinggu'
+            ));
+        } catch (Exception $e) {
+        Log::error('Laporan error: '.$e->getMessage());
+        return back()->with('error', 'Gagal memuat laporan.');
+    }    
     }
    
 
@@ -224,58 +257,67 @@ class AdminController extends Controller
     {
         $query = RekamMedis::with(['pasien', 'pendaftaran.jenisLayanan']);
 
-        if ($request->layanan) {
-            $query->whereHas('pendaftaran.jenisLayanan', function($q) use ($request) {
-                $q->where('nama_layanan', $request->layanan);
+        if ($request->filled('jenis_layanan')) {
+            $query->whereHas('pendaftaran', function ($q) use ($request) {
+                $q->where('id_jenis_layanan', $request->jenis_layanan);
             });
         }
 
-        if ($request->filled('filter_type')) {
-        $tanggal = $request->filled('tanggal')
-            ? \Carbon\Carbon::parse($request->tanggal)
-            : now();
+        if ($request->filled('filter_type') && $request->filled('tanggal')) {
+            $tanggal = Carbon::parse($request->tanggal);
 
-        if ($request->filter_type === 'mingguan') {
-            $query->whereBetween('tgl_rm', [
-                $tanggal->copy()->startOfWeek()->format('Y-m-d'),
-                $tanggal->copy()->endOfWeek()->format('Y-m-d')
-        ]);
-            } elseif ($request->filter_type === 'bulanan') {
-                $query  ->whereMonth('tgl_rm', $tanggal->month)
-                        ->whereYear('tgl_rm', $tanggal->year);
+            if ($request->filter_type === 'mingguan') {
+                $query->whereBetween('tgl_rm', [
+                    $tanggal->copy()->startOfWeek(),
+                    $tanggal->copy()->endOfWeek()
+                ]);
+            } else {
+                $query->whereMonth('tgl_rm', $tanggal->month)
+                    ->whereYear('tgl_rm', $tanggal->year);
             }
         }
 
         $data = $query->orderBy('tgl_rm', 'desc')->get();
 
-        return view('admin.laporan._table', compact('data'));
+        return view('admin.laporan_table', compact('data'));
 
     }
 
-    public function pdf(Request $request)
+   public function pdf(Request $request)
     {
         $query = RekamMedis::with(['pasien', 'pendaftaran.jenisLayanan']);
 
-        if ($request->layanan) {
-            $query->whereHas('pendaftaran.jenisLayanan', function($q) use ($request) {
-                $q->where('nama', $request->layanan);
+        if ($request->filled('jenis_layanan')) {
+            $query->whereHas('pendaftaran', function ($q) use ($request) {
+                $q->where('id_jenis_layanan', $request->jenis_layanan);
             });
         }
 
-        if ($request->tanggal) {
-            $query->whereDate('tgl_rm', $request->tanggal);
+        if ($request->filled('filter_type') && $request->filled('tanggal')) {
+            $tanggal = Carbon::parse($request->tanggal);
+
+            if ($request->filter_type === 'mingguan') {
+                $query->whereBetween('tgl_rm', [
+                    $tanggal->copy()->startOfWeek(),
+                    $tanggal->copy()->endOfWeek()
+                ]);
+            } else {
+                $query->whereMonth('tgl_rm', $tanggal->month)
+                    ->whereYear('tgl_rm', $tanggal->year);
+            }
         }
 
-        $data = $query->get();
+        $data = $query->orderBy('tgl_rm', 'desc')->get();
 
         $pdf = Pdf::loadView('admin.laporan_cetak', compact('data'))
-                ->setPaper('a4', 'landscape');
+                ->setPaper('A4', 'landscape');
 
         return $pdf->download('laporan-kunjungan.pdf');
     }
 
     public function simpanPendaftaran(Request $request)
     {
+        try {
         $request->validate([
             'id_pasien' => 'required|exists:pasien,id_pasien',
             'id_jenis_layanan' => 'required|exists:jenis_layanan,id',
@@ -295,46 +337,55 @@ class AdminController extends Controller
         ]);
 
         return redirect()->back()->with('success', 'Pendaftaran berhasil!');
+
+        } catch (Exception $e) {
+            Log::error($e->getMessage());
+            return back()->with('error', 'Gagal melakukan pendaftaran.');
+        }
     }
 
     public function simpanRekamMedis(Request $request, $id)
     {
-        $request->validate([
-            'anamnesa' => 'required|string',
-            'diagnosa' => 'required|string',
-            'terapi' => 'required|string',
-            'keterangan' => 'nullable|string',
-            'tgl_rm' => 'required|date',
-        ]);
+        try {
+            $request->validate([
+                'anamnesa' => 'required|string',
+                'diagnosa' => 'required|string',
+                'terapi' => 'required|string',
+                'keterangan' => 'nullable|string',
+                'tgl_rm' => 'required|date',
+            ]);
 
-        // load pendaftaran sekaligus pasien
-        $pendaftaran = PendaftaranLayanan::with('pasien')->findOrFail($id);
-        $pasien = $pendaftaran->pasien; // sekarang pasti ada karena with + findOrFail
+            // load pendaftaran dan pasien
+            $pendaftaran = PendaftaranLayanan::with('pasien')->findOrFail($id);
+            $pasien = $pendaftaran->pasien;
 
-        
-        if (!$pasien) {
-            return back()->with('error', 'Data pasien tidak ditemukan untuk pendaftaran ini.');
+            
+            if (!$pasien) {
+                return back()->with('error', 'Data pasien tidak ditemukan untuk pendaftaran ini.');
+            }
+
+            $data = [
+                'id_rm' => $pasien->id_rm,               
+                'id_pasien' => $pasien->id_pasien,
+                'id_pendaftaran' => $pendaftaran->id_pendaftaran ?? $pendaftaran->id, 
+                'id_admin' => auth()->check() ? auth()->id() : null,
+                'id_jenis_layanan' => $pendaftaran->id_jenis_layanan ?? null,
+                'tgl_rm' => $request->tgl_rm,
+                'anamnesa' => $request->anamnesa,
+                'diagnosa' => $request->diagnosa,
+                'terapi' => $request->terapi,
+                'keterangan' => $request->keterangan,
+            ];
+
+            RekamMedis::create($data);
+
+            $pendaftaran->update(['status' => 'done']);
+
+            return redirect()->back()->with('success', 'Rekam medis berhasil disimpan dan status pasien diperbarui.');
+        } catch (Exception $e) {
+            Log::error($e->getMessage());
+            return back()->with('error', 'Gagal memuat dashboard.');
         }
-
-        $data = [
-            'id_rm' => $pasien->id_rm,               
-            'id_pasien' => $pasien->id_pasien,
-            'id_pendaftaran' => $pendaftaran->id_pendaftaran ?? $pendaftaran->id, 
-            'id_admin' => auth()->check() ? auth()->id() : null,
-            'id_jenis_layanan' => $pendaftaran->id_jenis_layanan ?? null,
-            'tgl_rm' => $request->tgl_rm,
-            'anamnesa' => $request->anamnesa,
-            'diagnosa' => $request->diagnosa,
-            'terapi' => $request->terapi,
-            'keterangan' => $request->keterangan,
-        ];
-
-        RekamMedis::create($data);
-
-        $pendaftaran->update(['status' => 'done']);
-
-        return redirect()->back()->with('success', 'Rekam medis berhasil disimpan dan status pasien diperbarui.');
+        
     }
-
-    
 }

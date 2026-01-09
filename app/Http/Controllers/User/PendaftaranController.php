@@ -24,90 +24,102 @@ class PendaftaranController extends Controller
             'status' => 'nullable|in:waiting,done',
         ]);
 
-        $pasien = Auth::guard('pasien')->user()->id_pasien;
+        try {
+            $pasien = Auth::guard('pasien')->user()->id_pasien;
 
-        $jumlahAntrianHariIni = PendaftaranLayanan::whereDate('tgl_pendaftaran', $request->tgl_pendaftaran)->count();
-        $no_antrian_baru = $jumlahAntrianHariIni + 1;
+            $jumlahAntrianHariIni = PendaftaranLayanan::whereDate('tgl_pendaftaran', $request->tgl_pendaftaran)->count();
+            $no_antrian_baru = $jumlahAntrianHariIni + 1;
 
-        PendaftaranLayanan::create([
-            'id_pasien' => $pasien,
-            'tgl_pendaftaran' => $request->tgl_pendaftaran,
-            'id_jenis_layanan' => $request->id_jenis_layanan,
-            'no_antrian' => str_pad($no_antrian_baru, 4, '0', STR_PAD_LEFT),
-            'status' => $request->status ?? 'waiting',
-        ]);
+            PendaftaranLayanan::create([
+                'id_pasien' => $pasien,
+                'tgl_pendaftaran' => $request->tgl_pendaftaran,
+                'id_jenis_layanan' => $request->id_jenis_layanan,
+                'no_antrian' => str_pad($no_antrian_baru, 4, '0', STR_PAD_LEFT),
+                'status' => $request->status ?? 'waiting',
+            ]);
 
-        $layanan = JenisLayanan::find($request->id_jenis_layanan);
-        $pasienData = Auth::guard('pasien')->user();
+            $layanan = JenisLayanan::find($request->id_jenis_layanan);
+            $pasienData = Auth::guard('pasien')->user();
 
-        Mail::to($pasienData->email)->send(
-            new PendaftaranBerhasilMail(
-                $pasienData,
-                str_pad($no_antrian_baru, 4, '0', STR_PAD_LEFT),
-                $layanan->nama_layanan,
-                now()->addMinutes(10)->format('H:i'), // contoh estimasi datang
-                $request->tgl_pendaftaran
-            )
-        );
+            Mail::to($pasienData->email)->send(
+                new PendaftaranBerhasilMail(
+                    $pasienData,
+                    str_pad($no_antrian_baru, 4, '0', STR_PAD_LEFT),
+                    $layanan->nama_layanan,
+                    now()->addMinutes(10)->format('H:i'), // contoh estimasi datang
+                    $request->tgl_pendaftaran
+                )
+            );
 
-        return redirect()->route('user.home')->with('success', 'Pendaftaran berhasil disimpan ke database dan email terkirim!');
+            return redirect()->route('user.home')->with('success', 'Pendaftaran berhasil disimpan ke database dan email terkirim!');
+
+        } catch (\Exception $e) {
+            return back()->with('error', 'Pendaftaran gagal. Silakan coba kembali.');
+        }
     }
 
     public function simpanPersalinan(Request $request)
     {
-        $request->validate([
-            'id_jenis_layanan' => 'required|exists:jenis_layanan,id',
-            'tgl_pendaftaran' => 'required|date',
-            'status' => 'nullable|in:waiting,done',
-        ]);
+        try {
+            $request->validate([
+                'id_jenis_layanan' => 'required|exists:jenis_layanan,id',
+                'tgl_pendaftaran' => 'required|date',
+                'status' => 'nullable|in:waiting,done',
+            ]);
 
-        $pasien = Auth::guard('pasien')->user()->id_pasien;
-        $layanan = JenisLayanan::find($request->id_jenis_layanan);
+            $pasien = Auth::guard('pasien')->user()->id_pasien;
+            $layanan = JenisLayanan::find($request->id_jenis_layanan);
 
-        if (!$layanan || $layanan->nama_layanan !== 'Persalinan') {
-            return redirect()->route('user.home')
-                ->with('error', 'Layanan ini bukan Persalinan.');
-        }
-
-        // Hitung jumlah pendaftar persalinan di tanggal yang sama
-        $jumlahAntrian = PendaftaranLayanan::whereDate('tgl_pendaftaran', $request->tgl_pendaftaran)
-            ->whereHas('jenisLayanan', function ($q) {
-                $q->where('nama_layanan', 'Persalinan');
-            })
-            ->count();
-
-            if ($jumlahAntrian >= 3) {
+            if (!$layanan || $layanan->nama_layanan !== 'Persalinan') {
                 return redirect()->route('user.home')
-                    ->with('error', 'Kuota persalinan hari ini sudah penuh (maksimal 3 pasien).');
+                    ->with('error', 'Layanan ini bukan Persalinan.');
+            }
+
+            // Hitung jumlah pendaftar persalinan di tanggal yang sama
+            $jumlahAntrian = PendaftaranLayanan::whereDate('tgl_pendaftaran', $request->tgl_pendaftaran)
+                ->whereHas('jenisLayanan', function ($q) {
+                    $q->where('nama_layanan', 'Persalinan');
+                })
+                ->count();
+
+                if ($jumlahAntrian >= 3) {
+                    return redirect()->route('user.home')
+                        ->with('error', 'Kuota persalinan hari ini sudah penuh (maksimal 3 pasien).');
+            }
+
+            // Nomor antrian: urut sesuai jumlah antrian, bukan random
+            $no_antrian = str_pad($jumlahAntrian + 1, 3, '0', STR_PAD_LEFT);
+
+
+            PendaftaranLayanan::create([
+                'id_pasien' => $pasien,
+                'tgl_pendaftaran' => $request->tgl_pendaftaran,
+                'id_jenis_layanan' => $layanan->id,
+                'no_antrian' => $no_antrian,
+                'status' => $request->status ?? 'waiting',
+            ]);
+
+            // Kirim email ke pasien
+            $pasienData = Auth::guard('pasien')->user();
+
+            Mail::to($pasienData->email)->send(
+                new PendaftaranBerhasilMail(
+                    $pasienData,
+                    $no_antrian,
+                    $layanan->nama_layanan,
+                    now()->addMinutes(10)->format('H:i'),
+                    $request->tgl_pendaftaran
+                )
+            );
+
+            return redirect()->route('user.home')
+                ->with('success', 'Pendaftaran persalinan berhasil disimpan dan email terkirim!');
+
+        } catch (\Throwable $e) {
+
+            return redirect()->route('user.home')
+                ->with('error', 'Terjadi kesalahan sistem. Silakan coba lagi.');
         }
-
-        // Nomor antrian: urut sesuai jumlah antrian, bukan random
-        $no_antrian = str_pad($jumlahAntrian + 1, 3, '0', STR_PAD_LEFT);
-
-
-        PendaftaranLayanan::create([
-            'id_pasien' => $pasien,
-            'tgl_pendaftaran' => $request->tgl_pendaftaran,
-            'id_jenis_layanan' => $layanan->id,
-            'no_antrian' => $no_antrian,
-            'status' => $request->status ?? 'waiting',
-        ]);
-
-        // Kirim email ke pasien
-        $pasienData = Auth::guard('pasien')->user();
-
-        Mail::to($pasienData->email)->send(
-            new PendaftaranBerhasilMail(
-                $pasienData,
-                $no_antrian,
-                $layanan->nama_layanan,
-                now()->addMinutes(10)->format('H:i'),
-                $request->tgl_pendaftaran
-            )
-        );
-
-        return redirect()->route('user.home')
-            ->with('success', 'Pendaftaran persalinan berhasil disimpan dan email terkirim!');
     }
 
     public function store(Request $request)

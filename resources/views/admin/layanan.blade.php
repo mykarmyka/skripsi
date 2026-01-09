@@ -25,7 +25,13 @@
         <div class="d-flex justify-content-between align-items-center mb-3">
         
             <div>
-                <input type="text" id="search" class="form-control" placeholder="Search">
+                <form method="GET">
+                    <input type="text"
+                        name="search"
+                        class="form-control"
+                        placeholder="Search"
+                        value="{{ request('search') }}">
+                </form>
             </div>
         </div>
 

@@ -135,12 +135,12 @@
                         <td>{{ $rm->diagnosa ?? '-' }}</td>
                         <td>
                             <button class="btn btn-link p-0 text-primary btn-edit" data-id="{{ $rm->id_rm }}" title="Detail Rekam Medis">
-                                <i class="bi bi-pencil-square fs-5"></i>
+                                <i class="bi bi-file-earmark-text fs-5"></i>
                             </button>
                             <form action="{{ route('admin.rekam-medis.destroy', $rm->id_rm) }}" method="POST" style="display:inline">
                                 @csrf
                                 @method('DELETE')
-                                <button onclick="return confirm('Yakin hapus data?')" class="btn btn-link p-0 text-danger" title="Hapus"><i class="bi bi-trash fs-5"></i></button>
+                                <button onclick="return confirm('Yakin hapus data?')" class="btn btn-link p-0 text-primary" title="Hapus"><i class="bi bi-trash fs-5"></i></button>
                             </form>
                         </td>
                     </tr>

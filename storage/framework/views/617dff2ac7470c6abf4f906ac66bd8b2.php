@@ -18,7 +18,7 @@
             <p class='mb-4'>Periksa dan perbarui data pasien secara menyeluruh</p>
         </div>
         <div class="d-flex align-items-center">
-            <span class="me-2">Hello, Admin</span>
+            <span class="me-2">Hello, <?php echo e(Auth::user()->username); ?></span>
             <i class="bi bi-person-circle" style="font-size: 1.5rem;"></i>
         </div>
     </div>

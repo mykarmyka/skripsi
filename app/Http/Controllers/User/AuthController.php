@@ -27,10 +27,16 @@ class AuthController extends Controller
             
         ]);
 
-        $pasien = Pasien::findOrFail($id);
-        $pasien->update($request->all());
+        try {
 
-        return redirect()->route('pasien.index')->with('success', 'Data berhasil diupdate');
+            $pasien = Pasien::findOrFail($id);
+            $pasien->update($request->all());
+
+            return redirect()->route('pasien.index')->with('success', 'Data berhasil diupdate');
+        
+        } catch (\Exception $e) {
+            return back()->with('error', 'Gagal memperbarui data pasien.');
+        }   
     }
 
 
@@ -59,26 +65,32 @@ class AuthController extends Controller
             
         ]);
 
-        $last = Pasien::orderBy('id_pasien', 'desc')->first(); // sesuaikan primary key tabelmu
-        $newRM = 'RM' . str_pad(($last ? $last->id_pasien + 1 : 1), 4, '0', STR_PAD_LEFT);
+        try {
 
-        $pasien = Pasien::create([
-            'id_rm' => $newRM,
-            'nama' => $request->nama,
-            'tempat_lahir' => $request->tempat_lahir,
-            'tgl_lahir' => $request->tgl_lahir,
-            'jenis_kelamin' => $request->jenis_kelamin,
-            'alamat' => $request->alamat,
-            'no_telp' => $request->no_telp,
-            'nama_pasangan' => $request->nama_pasangan,
-            'nik' => $request->nik,
-            'email' => $request->email,
-            
-        ]);
+            $last = Pasien::orderBy('id_pasien', 'desc')->first(); // sesuaikan primary key tabelmu
+            $newRM = 'RM' . str_pad(($last ? $last->id_pasien + 1 : 1), 4, '0', STR_PAD_LEFT);
 
-        session(['user_id' => $pasien->id]);
-        return redirect()->route('user.login')
-                         ->with('success', 'Selamat! Anda sudah terdaftar, silakan login.');
+            $pasien = Pasien::create([
+                'id_rm' => $newRM,
+                'nama' => $request->nama,
+                'tempat_lahir' => $request->tempat_lahir,
+                'tgl_lahir' => $request->tgl_lahir,
+                'jenis_kelamin' => $request->jenis_kelamin,
+                'alamat' => $request->alamat,
+                'no_telp' => $request->no_telp,
+                'nama_pasangan' => $request->nama_pasangan,
+                'nik' => $request->nik,
+                'email' => $request->email,
+                
+            ]);
+
+            session(['user_id' => $pasien->id]);
+            return redirect()->route('user.login')
+                            ->with('success', 'Selamat! Anda sudah terdaftar, silakan login.');
+
+        } catch (\Exception $e) {
+            return back()->with('error', 'Pendaftaran gagal, silakan coba lagi.');
+        }
     }
 
     public function login(Request $request)
@@ -87,22 +99,26 @@ class AuthController extends Controller
             'nik' => 'required|digits:16|exists:pasien,nik',
         ]);
 
-        // Tambahan: logout guard dulu biar session bersih
-        Auth::guard('pasien')->logout();
-        $request->session()->invalidate();
-        $request->session()->regenerateToken();
+        try {
+            Auth::guard('pasien')->logout();
+            $request->session()->invalidate();
+            $request->session()->regenerateToken();
 
 
-        $pasien = Pasien::where('nik', $request->nik)->first();
+            $pasien = Pasien::where('nik', $request->nik)->first();
 
-        if ($pasien) {
-            Auth::guard('pasien')->login($pasien); // ← LOGIN DENGAN GUARD 'pasien'
-            $request->session()->regenerate();     // ← regenerasi session (wajib)
-            
-            return redirect()->route('user.home');
+            if ($pasien) {
+                Auth::guard('pasien')->login($pasien); 
+                $request->session()->regenerate();    
+                
+                return redirect()->route('user.home');
+            }
+
+            return back()->withErrors(['nik' => 'nik tidak ditemukan.']);
+
+        } catch (\Exception $e) {
+            return back()->with('error', 'Login gagal, silakan coba kembali.');
         }
-
-        return back()->withErrors(['nik' => 'nik tidak ditemukan.']);
     }
 
     public function logout()

@@ -26,21 +26,21 @@ class UserController extends Controller
 
         $idPasien = $pasien->id_pasien;
 
-        // 🧾 Statistik pribadi
+        // Statistik pribadi
         $totalKunjungan = RekamMedis::where('id_pasien', $idPasien)->count();
         $kunjunganBulanIni = RekamMedis::where('id_pasien', $idPasien)
             ->whereMonth('tgl_rm', Carbon::now()->month)
             ->whereYear('tgl_rm', Carbon::now()->year)
             ->count();
 
-        // 🩺 Status pendaftaran hari ini
+        // Status pendaftaran hari ini
         $pendaftaranHariIni = PendaftaranLayanan::with('jenisLayanan')
             ->where('id_pasien', $idPasien)
             ->whereDate('tgl_pendaftaran', now()->toDateString())
             ->latest('created_at')
             ->first();
 
-        // 🧠 Rekam medis terakhir
+        // Rekam medis terakhir
         $rekamMedisTerakhir = RekamMedis::where('id_pasien', $idPasien)
             ->latest('tgl_rm')
             ->first();

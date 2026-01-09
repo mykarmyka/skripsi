@@ -9,7 +9,6 @@
                     <p class="mb-6 text-gray-700">Selamat Datang di Website Klinik</p>
                 </div>
                 <div class="d-flex align-items-center">
-                    <input type="text" class="form-control me-2" placeholder="Search" style="width: 200px;">
                     <span class="me-2">Hello, <?php echo e(Auth::user()->username); ?></span>
                     <i class="bi bi-person-circle" style="font-size: 1.5rem;"></i>
                 </div>
@@ -33,7 +32,13 @@
 
     <div class="bg-white p-6 rounded shadow">
         <h3 class="text-lg font-semibold mb-4">Data Riwayat Rekam Medis</h3>
-        <input type="text" placeholder="Search..." class="mb-3 border rounded px-2 py-1">
+        <form method="GET">
+            <input type="text"
+                name="search"
+                placeholder="Search"
+                value="<?php echo e(request('search')); ?>"
+                class="mb-3 border rounded px-2 py-1">
+        </form>
         <table class="w-full border text-sm">
             <thead>
                 <tr class="bg-gray-100">
